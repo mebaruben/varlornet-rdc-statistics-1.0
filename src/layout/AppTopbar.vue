@@ -3,6 +3,32 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
 
+const selectedSite = ref();
+const selectedDay = ref();
+const countries = ref([
+    { name: 'KINSHASA' },
+    { name: 'MATADI' },
+    { name: 'BOMA' },
+    { name: 'MUANDA' },
+    { name: 'LUBUMBASHI' },
+    { name: 'GOMA' },
+    { name: 'BUKAVU' },
+    { name: 'KISANGANI' },
+    { name: 'KIPUSHI' },
+    { name: 'KASUMBALESA' }
+]);
+
+const days = ref([
+    { name: 'Live', nbre: 0 },
+    { name: 'J-1', nbre: 1 },
+    { name: 'J-2', nbre: 2 },
+    { name: 'J-3', nbre: 3 },
+    { name: 'J-4', nbre: 4 },
+    { name: 'J-5', nbre: 5 },
+]);
+
+
+
 const { layoutConfig, onMenuToggle } = useLayout();
 
 const outsideClickListener = ref(null);
@@ -64,7 +90,7 @@ const isOutsideClicked = (event) => {
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
-            <span>SAKAI</span>
+            <span>INV-STATISTICS 1.0</span>
         </router-link>
 
         <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
@@ -76,6 +102,50 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
+            <div class="flex gap-3 mt-1">
+                <Dropdown v-model="selectedSite" :options="countries" filter optionLabel="name"
+                    placeholder="Select a Site" class="w-full md:w-[14rem] ">
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value" class="flex items-center">
+
+                            <div>{{ slotProps.value.name }}</div>
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex items-center">
+
+                            <div>{{ slotProps.option.name }}</div>
+                        </div>
+                    </template>
+                </Dropdown>
+
+                <Dropdown v-model="selectedDay" :options="days"  optionLabel="name" placeholder="Select a Day"
+                    class="w-full md:w-[14rem] ">
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value" class="flex items-center">
+
+                            <div>{{ slotProps.value.name }}</div>
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex items-center">
+
+                            <div>{{ slotProps.option.name }}</div>
+                        </div>
+                    </template>
+                </Dropdown>
+            </div>
+
+        </div>
+
+        <div class="layout-topbar-menu" :class="topbarMenuClasses">
+
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-calendar"></i>
                 <span>Calendar</span>
