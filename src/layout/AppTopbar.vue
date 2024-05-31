@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 const selectedSite = ref();
 const selectedDay = ref();
 const countries = ref([
+    {name:'TOUS SITES'},
     { name: 'KINSHASA' },
     { name: 'MATADI' },
     { name: 'BOMA' },
@@ -89,8 +90,8 @@ const isOutsideClicked = (event) => {
 <template>
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo">
-            <img :src="logoUrl" alt="logo" />
-            <span>INV-STATISTICS 1.0</span>
+            <img src="/demo/images/login/inv.png" alt="logo" />
+            <span class="text-lg">INV-STATISTICS 1.0</span>
         </router-link>
 
         <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
