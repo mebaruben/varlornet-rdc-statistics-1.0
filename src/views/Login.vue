@@ -34,7 +34,7 @@ computed(() => {
 
 function getUserConnected(email) {
 
-    store.dispatch("auth/getUserConnected", email).then((data) => {
+    store.dispatch("auth/getUserConnected", email).then((response) => {
 
         router.push({ path: '/' })
 
@@ -45,6 +45,9 @@ function getUserConnected(email) {
     })
 
 }
+
+
+
 
 function auth() {
 

@@ -2,6 +2,7 @@ import api from './api';
 import TokenService from './token.service';
 
 class AuthService {
+    
     login(user) {
         console.log('auth: ' + user);
 
@@ -15,8 +16,8 @@ class AuthService {
         TokenService.removeUser();
     }
 
-    getUserConnected(email) {
-        return api.post('/user', email).then((response) => {
+    getUserConnected() {
+        return api.get('/user').then((response) => {
             if (response.data) {
                 console.log(JSON.stringify(response.data) + ' ' + response.status);
                 TokenService.setUser(response.data);

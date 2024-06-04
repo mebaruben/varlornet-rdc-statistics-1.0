@@ -1,4 +1,6 @@
-{"operations":{"CHANGEMENT D'ADRESSE":{"emise":0,"valide":0,"apure_non_valide":0},
+{
+  
+  "operations":{"CHANGEMENT D'ADRESSE":{"emise":0,"valide":0,"apure_non_valide":0},
   "DUPLICATA":{"emise":0,"valide":0,"apure_non_valide":0},
   "IMMATRICULATION":{"emise":16,"valide":67,"apure_non_valide":91},
   "IMMATRICULATION TEMPORAIRE":{"emise":0,"valide":0,"apure_non_valide":0},

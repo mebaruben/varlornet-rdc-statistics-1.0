@@ -28,7 +28,14 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
+const loading = ref(false);
 
+const load = () => {
+    loading.value = true;
+    setTimeout(() => {
+        loading.value = false;
+    }, 2000);
+};
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
@@ -51,10 +58,7 @@ const logoUrl = computed(() => {
 const onTopBarMenuButton = () => {
     topbarMenuActive.value = !topbarMenuActive.value;
 };
-const onSettingsClick = () => {
-    topbarMenuActive.value = false;
-    router.push('/documentation');
-};
+
 const topbarMenuClasses = computed(() => {
     return {
         'layout-topbar-menu-mobile-active': topbarMenuActive.value
@@ -103,6 +107,12 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
+           
+
+        </div>
+
+        <div class="layout-topbar-menu" :class="topbarMenuClasses">
+
             <div class="flex gap-3 mt-1">
                 <Dropdown v-model="selectedSite" :options="countries" filter optionLabel="name"
                     placeholder="Select a Site" class="w-full md:w-[14rem] ">
@@ -143,10 +153,6 @@ const isOutsideClicked = (event) => {
                 </Dropdown>
             </div>
 
-        </div>
-
-        <div class="layout-topbar-menu" :class="topbarMenuClasses">
-
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-calendar"></i>
                 <span>Calendar</span>
@@ -155,10 +161,8 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <button @click="onSettingsClick()" class="p-link layout-topbar-button">
-                <i class="pi pi-cog"></i>
-                <span>Settings</span>
-            </button>
+            <Button type="button" label="Deconnexion"  icon="pi pi-search" :loading="loading"
+                        @click="load"></Button>
         </div>
     </div>
 </template>

@@ -7,7 +7,7 @@ const axiosClient = axios.create({
     //"https://192.168.111.3:8080/stat"
     //"http://192.168.0.62:51782/stat"
 
-    baseURL: "http://192.168.0.62:51782/stat",
+    baseURL: "http://192.168.111.3:8080/stat",
 
     withCredentials: true
 });
@@ -34,12 +34,12 @@ axiosClient.interceptors.response.use(
         console.log(error);
         if (error.response) {
             if (error.response.status === 401) {
-                console.log(error.response.status)
+                console.log(error.response.data)
             } else if (error.response.status === 403) {
-                console.log(error.response.status)
+                console.log(error.response.data)
             } else if (error.response.status === 500) {
-                console.log(error.response.status)
-            }
+                console.log(error.response.data)
+            }el
         }
         return Promise.reject(error);
     }

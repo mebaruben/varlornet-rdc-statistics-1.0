@@ -1,4 +1,5 @@
 import AuthService from '../service/auth.service';
+import tokenService from '../service/token.service';
 
 
 export default {
@@ -10,6 +11,7 @@ export default {
         },
         user: {},
         sites: [],
+        messageError:null
     },
 
     getters: {
@@ -19,11 +21,17 @@ export default {
     mutations: {
         setToken: (state, tokenData) => {
             state.userToken.token = tokenData;
+            state.userToken.loggedIn = true;
         },
 
         setUser: (state, userData) => {
             state.user = Object.assign({},userData);
         },
+
+        setUserMesssageError:(state , message)=>{
+           state.messageError=message;
+        },
+
         setSites: (state, siteData) => {
             state.sites = siteData;
         },
@@ -32,9 +40,9 @@ export default {
             state.userToken.loggedIn = true;
             state.userToken.token = token;
         },
-        loginFailure(state) {
-            state.userToken.loggedIn = false;
-            state.userToken.token = null;
+        loginFailure(state , message) {
+            state.messageError = message;
+            
         },
         logout(state) {
             state.userToken.loggedIn = false;
@@ -51,25 +59,27 @@ export default {
             return AuthService.login(user).then(
                 (token) => {
                     commit('loginSuccess', token);
-
+                    tokenService.setLocalAccessToken(token);
                     return Promise.resolve(token);
                 },
                 (error) => {
-                    commit('loginFailure');
+                    commit('loginFailure' , error.response.data);
                     return Promise.reject(error);
                 }
             );
         },
 
-        getUserConnected({ commit, payload }) {
-            return AuthService.getUserConnected(payload).then(
+        getUserConnected({ commit }) {
+            return AuthService.getUserConnected().then(
                 (data) => {
                     console.log('utilisateur connecté : ' + data);
                     commit('setUser', data);
+                    
                     return data;
                 },
 
                 (error) => {
+                    commit('loginFailure' , error.response.data);
                     return Promise.reject(error);
                 }
             );
@@ -79,6 +89,10 @@ export default {
                 commit('setSites', data);
                 return data;
             });
+        },
+
+        getToken({commit}){
+            commit('setToken',tokenService.getLocalAccessToken);
         }
     }
 };

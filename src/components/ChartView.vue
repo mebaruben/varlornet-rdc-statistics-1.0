@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 
 const props=defineProps({
-    experience:{
+    chartCardOp:{
         type:Object , require:true
      }
 });
@@ -16,6 +16,8 @@ let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
 const pieData = ref(null);
 const pieOptions = ref(null);
+
+const chartPiedCard=ref(null);
 
 
 

@@ -1,9 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 
-
-
-
 const products = ref();
 const columns = [
     { field: 'operation', header: 'Opération' },

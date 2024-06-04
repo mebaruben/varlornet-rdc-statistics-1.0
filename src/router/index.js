@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
-import store from "../store";
+import store from '../store';
+import tokenService from '../service/token.service';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -8,7 +9,7 @@ const router = createRouter({
         {
             path: '/',
             component: AppLayout,
-            meta:{requiresAuth:true},
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: '/',
@@ -44,9 +45,7 @@ const router = createRouter({
                     path: '/dgi/note-temporaire',
                     name: 'note-temporaire',
                     component: () => import('@/views/dgi/NoteEmise.vue')
-                },
-
-                 
+                }
             ]
         },
         {
@@ -68,16 +67,32 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
-        } ,
+        },
 
         {
             path: '/login',
             name: 'Login',
             component: () => import('@/views/Login.vue')
-        },
+        }
     ]
 });
 
+// GOOD
+router.beforeEach((to, from, next) => {
 
+    if(tokenService.getLocalAccessToken()!=null){
+        
+        store.dispatch('auth/getToken');
+        console.log('token router : '+store.userToken.token);
+
+        if (to.name !== 'Login' && store.state.userToken.token != null) 
+            next({ name: 'Login' });
+        else next();
+
+    }else{
+        next({ name: 'Login' });
+    }
+    
+});
 
 export default router;
