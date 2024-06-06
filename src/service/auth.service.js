@@ -18,11 +18,11 @@ class AuthService {
 
     getUserConnected() {
         return api.get('/user').then((response) => {
-            if (response.data) {
+            if (response.status==200) {
                 console.log(JSON.stringify(response.data) + ' ' + response.status);
                 TokenService.setUser(response.data);
             }
-            return response.data;
+            return response;
         });
     }
 }

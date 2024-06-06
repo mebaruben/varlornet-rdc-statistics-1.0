@@ -1,12 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch  } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 
-const props=defineProps({
-    chartCardOp:{
-        type:Object , require:true
-     }
-});
+
 
 const { layoutConfig } = useLayout();
 let documentStyle = getComputedStyle(document.documentElement);
@@ -17,7 +13,6 @@ let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 const pieData = ref(null);
 const pieOptions = ref(null);
 
-const chartPiedCard=ref(null);
 
 
 
@@ -29,12 +24,13 @@ const setColorOptions = () => {
 };
 
 const setChart = () => {
-
+    
+   // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
         labels: ['Initiées', 'apurées', 'validées'],
         datasets: [
             {
-                data: [540, 325, 702],
+                data: [20, 40,60],
                 backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
             }
@@ -53,6 +49,8 @@ const setChart = () => {
     };
 
 };
+
+
 
 watch(
     layoutConfig.theme,

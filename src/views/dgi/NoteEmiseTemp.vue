@@ -15,9 +15,9 @@ const load = () => {
 
     ;
 
-    statistiqueDgiService.statNoteImmatriculation(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
+    statistiqueDgiService.statNoteTemporaire(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
 
-        noteImmList.value = response.data;
+        noteList.value = response.data;
     })
 
 
@@ -28,43 +28,43 @@ const load = () => {
 
 const selectedSite = ref({});
 const siteList = ref([]);
-const noteImmList = ref([]);
+const noteList = ref([]);
 
 onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
         siteList.value = response.data;
     })
 })
-
 </script>
 <template>
     <div class="grid">
         <div class="col-12">
             <div class="card">
-                <h5>Liste des Nouvelles Immatriculations tirées</h5>
+                <h5>Liste des Immatriculations Temporaires tirées</h5>
+
                 <div class="card flex justify-center flex-wrap gap-3">
 
                     <Calendar v-model="dateDebut" showIcon dateFormat="dd/mm/yy" />
 
                     <Calendar v-model="dateFin" showIcon dateFormat="dd/mm/yy" />
-                    <Dropdown v-model="selectedSite" :options="siteList" filter optionLabel="name"
-                        placeholder="Select a Site" class="w-auto md:w-[14rem] ">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex items-center">
+                    <Dropdown v-model="selectedSite" :options="countries" filter optionLabel="name"
+                    placeholder="Select a Site" class="w-auto md:w-[14rem] ">
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value" class="flex items-center">
 
-                                <div>{{ slotProps.value.nom }}</div>
-                            </div>
-                            <span v-else>
-                                {{ slotProps.placeholder }}
-                            </span>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="flex items-center">
+                            <div>{{ slotProps.value.name }}</div>
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex items-center">
 
-                                <div>{{ slotProps.option.nom }}</div>
-                            </div>
-                        </template>
-                    </Dropdown>
+                            <div>{{ slotProps.option.name }}</div>
+                        </div>
+                    </template>
+                </Dropdown>
                     <Button type="button" label="Recherche" icon="pi pi-search" :loading="loading"
                         @click="load"></Button>
                 </div>
@@ -74,7 +74,7 @@ onMounted(() => {
 
         <div class="col-12">
             <div class="card">
-                <DataTable :value="noteImmList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+                <DataTable :value="noteList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     tableStyle="min-width: 50rem">
                     <Column field="numOp" header="OPERATION" style="width: auto"></Column>
                     <Column field="site" header="SITE" style="width: auto"></Column>

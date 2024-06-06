@@ -15,13 +15,15 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use((config) => {
 
     const usertoken = store.state.auth.userToken;
+    
 
-    console.log("token : "+JSON.stringify(usertoken));
+    console.log("token : "+JSON.stringify(usertoken.token));
 
     config.headers['Content-Type']="application/json";
 
-    if (usertoken.token!=null) {    
-        config.headers.Authorization = 'Bearer ' + JSON.stringify(store.state.auth.userToken.token).toString();
+    if (usertoken.token!=null) { 
+
+        config.headers.Authorization = 'Bearer ' + JSON.stringify(store.state.auth.userToken.token);
     }
     return config;
 });

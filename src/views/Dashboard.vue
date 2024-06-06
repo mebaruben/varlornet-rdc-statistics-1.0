@@ -8,12 +8,6 @@ import store from '../store';
 import dashboardService from '../service/dashboard.service';
 
 
-computed(() => {
-    mapState(["auth"]);
-});
-
-
-
 const cardDataList = ref([
     { id: 1, title: 'PLAQUE DISPONIBLES', nombre: 120, icon: "pi pi-car" },
     { id: 2, title: 'PLAQUES RESERVEES', nombre: 120, icon: "pi pi-credit-card" },
@@ -23,60 +17,96 @@ const cardDataList = ref([
 
 ]);
 
-let listePiedData = ref([]);
+
 
 const { isDarkTheme } = useLayout();
 
 const products = ref(null);
-  
-const lineData = reactive({
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
-            tension: 0.4
-        },
-        {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.4
-        }
-    ]
-});
+
+
 const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
     { label: 'Remove', icon: 'pi pi-fw pi-minus' }
 ]);
 
 const lineOptions = ref(null);
-const dashOp=ref(null);
 const productService = new ProductService();
 
-const dateRech="2024-01-22";
+let listePiedData = ref([]);
+let dataPiedImm = ref(null);
+let dataPiedMut = ref(null);
+let dataPiedRei = ref(null);
+let dataPiedCon = ref(null);
+let dataPiedIt = ref(null);
 
-console.log(store.state.auth.user.nom , store.state.auth.user.postnom, store.state.auth.user.prenom )
+const dateRech = "2024-01-22";
+
+console.log(store.state.auth.user.nom, store.state.auth.user.postnom, store.state.auth.user.prenom);
+
+computed(() => {
+
+    mapState(["auth"]);
+    mapState(["dashboard"]);
+
+
+
+});
+
 
 onMounted(() => {
-
-    dashboardService.appelServiceOperation(dateRech).then((response)=>{
-
-        listePiedData =  dashboardService.getDateDashboardList(response)
-    
-    }
-    );
-
+   
     dashboardService.appelServicePlaques(dateRech);
     dashboardService.appelServiceFinanceSite(dateRech);
-
-    productService.getProductsSmall().then((data) => (products.value = data));
+    setColorOptions(),
+    setChart()
+    //store.state.dashboard.getters.chartPiedList(dateRech);
+     store.dispatch("dashboard/appelServiceOperation", dateRech);
+    //console.log("data computed: " + store.state.dashboard.chartPiedList);
 });
+
+//IMMATRICULATION  //
+let documentStyle = getComputedStyle(document.documentElement);
+let textColor = documentStyle.getPropertyValue('--text-color');
+let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+const pieData = ref(null);
+const pieOptions = ref(null);
+
+const setColorOptions = () => {
+    documentStyle = getComputedStyle(document.documentElement);
+    textColor = documentStyle.getPropertyValue('--text-color');
+    textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+};
+
+ const setChart = () => {
+    // chartPiedCard=
+    pieData.value = {
+        labels: ['Initiées', 'apurées', 'validées'],
+        datasets: [
+            {
+                data: [540, 325, 702],
+                backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
+                hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
+            }
+        ]
+    };
+
+    pieOptions.value = {
+        plugins: {
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                    color: textColor
+                }
+            }
+        }
+    };
+
+};
+
+//MUTATION//
 
 const formatCurrency = (value) => {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -148,6 +178,7 @@ watch(
             applyDarkTheme();
         } else {
             applyLightTheme();
+            // applyDarkTheme();
         }
     },
     { immediate: true }
@@ -160,14 +191,16 @@ watch(
         <CardView v-for="item in cardDataList" :cardData="item"></CardView>
 
         <div class="grid grid-cols-3">
-
-            <ChartView ></ChartView>
-            <ChartView ></ChartView>
-            <ChartView ></ChartView>
-            <ChartView ></ChartView>
-            <ChartView ></ChartView>
-            <ChartView ></ChartView>
-            
+            <div class="col-12 lg:col-6 xl:col-4">
+                <div class="card flex flex-column align-items-center">
+                    <h5 class="text-left w-full">{{ store.state.dashboard.chartPiedList }}</h5>
+                    <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
+                </div>
+            </div>
+            <ChartView></ChartView>
+            <ChartView></ChartView>
+            <ChartView></ChartView>
+            <ChartView></ChartView>
         </div>
     </div>
 </template>

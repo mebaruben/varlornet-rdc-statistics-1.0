@@ -1,13 +1,17 @@
 class TokenService {
  
     getLocalAccessToken() {
-      const token = JSON.parse(localStorage.getItem("token"));
-      return token;
+      const token =localStorage.getItem("token");
+      return JSON.parse(token);
     }
 
     setLocalAccessToken(token){
         console.log(JSON.stringify(token));
         localStorage.setItem("token", JSON.stringify(token));
+    }
+
+    removeToken() {
+      localStorage.removeItem("token");
     }
   
     getUser() {

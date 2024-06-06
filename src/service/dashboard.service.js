@@ -1,6 +1,6 @@
-import { registerRuntimeCompiler } from 'vue';
 import api from '../service/api';
-import DashOperation from './entities/DashOperation';
+import moment from 'moment';
+
 class DashBoardService {
     getDateDashboard(nombreJour) {
         var date = new Date();
@@ -10,17 +10,20 @@ class DashBoardService {
         return local.toJSON().slice(0, 10);
     }
 
+    getDateFormat(dateData) {
+        return moment(dateData).format('yyyy-MM-DD');
+    }
+
     appelServiceOperation(dateRech) {
         return api.get('/dash/notes/' + dateRech).then((response) => {
-            console.log('response appelServiceOperation:' + JSON.stringify(response.data));
-
+            //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
             return response;
         });
     }
 
     appelServiceOperationSite(dateRech, nomSite) {
         return api.get('/dash/notes/' + nomSite + '/' + dateRech).then((response) => {
-            console.log('response appelServiceOperationSite:' + JSON.stringify(response.data));
+            //  console.log('response appelServiceOperationSite:' + JSON.stringify(response.data));
             return response;
         });
     }
@@ -110,6 +113,17 @@ class DashBoardService {
         console.log(list.length);
         console.log(list);
         return list;
+    }
+
+    getCardDataDash(response1, response2) {
+        let list = [];
+    }
+
+    getPrivilegesSites() {
+        return api.get('/privileges/profile/sites').then((response) => {
+            console.log(response.data);
+            return response;
+        });
     }
 }
 export default new DashBoardService();

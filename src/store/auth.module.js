@@ -1,5 +1,6 @@
 import AuthService from '../service/auth.service';
 import tokenService from '../service/token.service';
+import router from '../router';
 
 
 export default {
@@ -7,7 +8,7 @@ export default {
     state: {
         userToken: {
             loggedIn: false,
-            token: null
+            token: tokenService.getLocalAccessToken() 
         },
         user: {},
         sites: [],
@@ -71,11 +72,11 @@ export default {
 
         getUserConnected({ commit }) {
             return AuthService.getUserConnected().then(
-                (data) => {
-                    console.log('utilisateur connecté : ' + data);
-                    commit('setUser', data);
+                (response) => {
+                    console.log('utilisateur connecté : ' + response);
+                    commit('setUser', response.data);
                     
-                    return data;
+                    return response;
                 },
 
                 (error) => {
@@ -85,14 +86,20 @@ export default {
             );
         },
         sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then(({ data }) => {
-                commit('setSites', data);
-                return data;
+            return axiosClient.get('/privileges/profile/sites').then(({ response }) => {
+                commit('setSites', response.data);
+                return response.data;
             });
         },
 
         getToken({commit}){
             commit('setToken',tokenService.getLocalAccessToken);
+        } ,
+
+        logout({commit}){
+            tokenService.removeToken;
+            commit('logout');
+            router.push({ name: 'Login' })
         }
     }
 };

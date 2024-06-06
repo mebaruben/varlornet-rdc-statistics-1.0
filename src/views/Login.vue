@@ -36,7 +36,10 @@ function getUserConnected(email) {
 
     store.dispatch("auth/getUserConnected", email).then((response) => {
 
+       if(response.status==200){
         router.push({ path: '/' })
+       } 
+        
 
     }).catch(err => {
         console.log(err)
