@@ -16,19 +16,18 @@ const load = () => {
     ;
 
     statistiqueDgiFinanciere.statFinanceOperationsApures(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
-
-        noteImmList.value = response.data;
+        console.log(response.data);
+        loading.value = false;
+        noteList.value = response.data;
     })
 
 
-    setTimeout(() => {
-        loading.value = false;
-    }, 2000);
-};
+    //setTimeout(() => {}, 2000);
+}
 
 const selectedSite = ref({});
 const siteList = ref([]);
-const noteImmList = ref([]);
+const noteList = ref([]);
 
 onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
@@ -74,19 +73,23 @@ onMounted(() => {
 
         <div class="col-12">
             <div class="card">
-                <DataTable :value="noteImmList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+                <DataTable :value="noteList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     tableStyle="min-width: 50rem">
                     <Column field="numOp" header="OPERATION" style="width: auto"></Column>
                     <Column field="site" header="NATURE" style="width: auto"></Column>
                     <Column field="noms" header="NOM OU RAISSON SOCIALE" style="width: auto"></Column>
                     <Column field="numImpot" header="NIF" style="width: auto"></Column>
-                    <Column field="numChassis" header="DATE DE L'OPERATION" style="width: auto"></Column>
-                    <Column field="numPlaque" header="TRESOR" style="width: auto"></Column>
-                    <Column field="genre" header="RTNC" style="width: auto"></Column>
-                    <Column field="marque" header="DGI" style="width: auto"></Column>
-                    <Column field="modele" header="UTSCH" style="width: auto"></Column>
-                    <Column field="modele" header="VALORNET" style="width: auto"></Column>
-                    <Column field="modele" header="MONTANT PAYE" style="width: auto"></Column>
+                    <Column field="dateOperation" header="DATE OPERATION" style="width: auto"></Column>
+                    <Column field="partTresor" header="TRESOR($)" style="width: auto"></Column>
+                    <Column field="partTresorFc" header="TRESOR(FC)" style="width: auto"></Column>
+                    <Column field="partSyntell" header="VALORNET($)" style="width: auto"></Column>
+                    <Column field="partSyntellFc" header="VALORNET(FC)" style="width: auto"></Column>
+                    <Column field="partRtnc" header="RTNC($)" style="width: auto"></Column>
+                    <Column field="partRtncFc" header="RTNC(FC)" style="width: auto"></Column>
+                    <Column field="partUtsch" header="UTSCH($)" style="width: auto"></Column>
+                    <Column field="partUtschFc" header="UTSCH(FC)" style="width: auto"></Column>
+                    <Column field="montantOp" header="MONT. PAYE($)" style="width: auto"></Column>
+                    <Column field="montantOpFc" header="MONT. PAYE(FC)" style="width: auto"></Column>
                 </DataTable>
             </div>
         </div>

@@ -60,7 +60,7 @@ export default {
             return AuthService.login(user).then(
                 (token) => {
                     commit('loginSuccess', token);
-                    tokenService.setLocalAccessToken(token);
+                    tokenService.setLocalAccessToken(token);       
                     return Promise.resolve(token);
                 },
                 (error) => {
@@ -73,8 +73,10 @@ export default {
         getUserConnected({ commit }) {
             return AuthService.getUserConnected().then(
                 (response) => {
-                    console.log('utilisateur connecté : ' + response);
-                    commit('setUser', response.data);
+                    console.log(response);
+                    console.log('utilisateur connecté : ' + JSON.stringify(response.data));
+                    tokenService.setUser(response);                   
+                    commit('setUser', JSON.stringify(response.data));
                     
                     return response;
                 },

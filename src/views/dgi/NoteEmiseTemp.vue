@@ -12,18 +12,14 @@ const load = () => {
     loading.value = true;
 
     console.log(dashboardService.getDateFormat(dateDebut.value));
-
-    ;
-
     statistiqueDgiService.statNoteTemporaire(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
-
+        console.log(response.data);
+        loading.value = false;
         noteList.value = response.data;
     })
 
 
-    setTimeout(() => {
-        loading.value = false;
-    }, 2000);
+   // setTimeout(() => {loading.value = false; }, 2000);
 };
 
 const selectedSite = ref({});
@@ -52,7 +48,7 @@ onMounted(() => {
                     <template #value="slotProps">
                         <div v-if="slotProps.value" class="flex items-center">
 
-                            <div>{{ slotProps.value.name }}</div>
+                            <div>{{ slotProps.value.nom }}</div>
                         </div>
                         <span v-else>
                             {{ slotProps.placeholder }}
@@ -61,7 +57,7 @@ onMounted(() => {
                     <template #option="slotProps">
                         <div class="flex items-center">
 
-                            <div>{{ slotProps.option.name }}</div>
+                            <div>{{ slotProps.option.nom }}</div>
                         </div>
                     </template>
                 </Dropdown>
@@ -78,6 +74,7 @@ onMounted(() => {
                     tableStyle="min-width: 50rem">
                     <Column field="numOp" header="OPERATION" style="width: auto"></Column>
                     <Column field="site" header="SITE" style="width: auto"></Column>
+                    <Column field="agent" header="OPERATEUR" style="width: auto"></Column>
                     <Column field="noms" header="NOM OU RAISSON SOCIALE" style="width: auto"></Column>
                     <Column field="numImpot" header="NIF" style="width: auto"></Column>
                     <Column field="numChassis" header="CHASSIS" style="width: auto"></Column>

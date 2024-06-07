@@ -1,3 +1,4 @@
+import axiosClient from "./api";
 class StatistiqueFinance{
 
     statFinanceOperationsNotes(idSite, dateDebut, dateFin) {
@@ -29,7 +30,7 @@ class StatistiqueFinance{
 
     statFinanceTotaleApuresParOperation(idSite, dateDebut, dateFin) {
         let requete = '';
-        if (idSite == 0) {
+        if (idSite == null) {
             requete = '/finances/apures/' + dateDebut + '/' + dateFin;
         } else {
             requete = '/finances/apures/' + idSite + '/' + dateDebut + '/' + dateFin;

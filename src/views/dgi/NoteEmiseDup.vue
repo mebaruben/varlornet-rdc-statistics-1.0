@@ -13,22 +13,18 @@ const load = () => {
 
     console.log(dashboardService.getDateFormat(dateDebut.value));
 
-    ;
-
     statistiqueDgiService.statNoteDuplicata(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
-
-        noteImmList.value = response.data;
+        console.log(response.data);
+        loading.value=false;
+        noteList.value = response.data;
     })
 
-
-    setTimeout(() => {
-        loading.value = false;
-    }, 2000);
+   // setTimeout(() => {loading.value = false;}, 2000);
 };
 
 const selectedSite = ref({});
 const siteList = ref([]);
-const noteImmList = ref([]);
+const noteList = ref([]);
 
 onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
@@ -51,7 +47,7 @@ onMounted(() => {
                     <template #value="slotProps">
                         <div v-if="slotProps.value" class="flex items-center">
 
-                            <div>{{ slotProps.value.name }}</div>
+                            <div>{{ slotProps.value.nom }}</div>
                         </div>
                         <span v-else>
                             {{ slotProps.placeholder }}
@@ -60,7 +56,7 @@ onMounted(() => {
                     <template #option="slotProps">
                         <div class="flex items-center">
 
-                            <div>{{ slotProps.option.name }}</div>
+                            <div>{{ slotProps.option.nom }}</div>
                         </div>
                     </template>
                 </Dropdown>

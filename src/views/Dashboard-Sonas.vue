@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted , ref, watch } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import CardView from './CardView.vue';
 import ChartView from '../components/ChartView.vue';
@@ -26,7 +26,7 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
-const userConnected = tokenService.getUser();
+const userConnected=tokenService.getUser();
 
 console.log(userConnected.data)
 
@@ -54,30 +54,16 @@ computed(() => {
 
 
 onMounted(() => {
+   
+    setColorOptions(),
+    setChart()
 
-    if (userConnected.data.module == '2') {
-        
-        dashboardService.appelServicePlaques(dateRech);
-        dashboardService.appelServiceFinanceSite(dateRech);
-        setColorOptions(),
-            setChart()
-        //store.state.dashboard.getters.chartPiedList(dateRech);
-        store.dispatch("dashboard/appelServiceOperation", dateRech);
-
-    }
-    else if (userConnected.data.module == '3') {
-
-    }
-
-
-
-    store.dispatch("auth/getUserConnected");
-    //
+     store.dispatch("auth/getUserConnected");
+     //
     //console.log("data computed: " + store.state.dashboard.chartPiedList);
     dashboardService.getPrivilegesSites().then((response) => {
         siteList.value = response.data;
-    });
-
+    }) ;
 
 });
 
@@ -97,7 +83,7 @@ const setColorOptions = () => {
     surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 };
 
-const setChart = () => {
+ const setChart = () => {
     // chartPiedCard=
     pieData.value = {
         labels: ['Initiées', 'apurées', 'validées'],
@@ -207,59 +193,54 @@ watch(
 
         <div class="col-12">
             <div class="card flex justify-center flex-wrap gap-1">
-                <div class="flex gap-3 mt-1">
+                    <div class="flex gap-3 mt-1">
+                       
+                <Dropdown v-model="selectedSite" :options="siteList" filter optionLabel="name"
+                    placeholder="Select a Site" class="w-full md:w-[14rem] ">
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value" class="flex items-center">
 
-                    <Dropdown v-model="selectedSite" :options="siteList" filter optionLabel="name"
-                        placeholder="Select a Site" class="w-full md:w-[14rem] ">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex items-center">
+                            <div>{{ slotProps.value.nom }}</div>
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex items-center">
 
-                                <div>{{ slotProps.value.nom }}</div>
-                            </div>
-                            <span v-else>
-                                {{ slotProps.placeholder }}
-                            </span>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="flex items-center">
+                            <div>{{ slotProps.option.nom }}</div>
+                        </div>
+                    </template>
+                </Dropdown>
 
-                                <div>{{ slotProps.option.nom }}</div>
-                            </div>
-                        </template>
-                    </Dropdown>
+                <Dropdown v-model="selectedDay" :options="days" optionLabel="name" placeholder="Select a Day"
+                    class="w-full md:w-[14rem] ">
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value" class="flex items-center">
 
-                    <Dropdown v-model="selectedDay" :options="days" optionLabel="name" placeholder="Select a Day"
-                        class="w-full md:w-[14rem] ">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex items-center">
+                            <div>{{ slotProps.value.name }}</div>
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex items-center">
 
-                                <div>{{ slotProps.value.name }}</div>
-                            </div>
-                            <span v-else>
-                                {{ slotProps.placeholder }}
-                            </span>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="flex items-center">
-
-                                <div>{{ slotProps.option.name }}</div>
-                            </div>
-                        </template>
-                    </Dropdown>
-                </div>
-
+                            <div>{{ slotProps.option.name }}</div>
+                        </div>
+                    </template>
+                </Dropdown>
             </div>
+                    
+                </div>
         </div>
 
         <CardView v-for="item in cardDataList" :cardData="item"></CardView>
 
         <div class="grid grid-cols-3">
-            <div class="col-12 lg:col-6 xl:col-4">
-                <div class="card flex flex-column align-items-center">
-                    <h5 class="text-left w-full">{{ store.state.dashboard.chartPiedList }}</h5>
-                    <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
-                </div>
-            </div>
+            
             <ChartView></ChartView>
             <ChartView></ChartView>
             <ChartView></ChartView>

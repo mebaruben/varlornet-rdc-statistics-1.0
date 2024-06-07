@@ -17,8 +17,8 @@ const load = () => {
     ;
 
     statistiqueDgiFinanciere.statFinanceRecetteParSite(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
-
-        noteImmList.value = response.data;
+        console.log(response.data);
+        noteList.value = response.data;
     })
 
 
@@ -29,7 +29,7 @@ const load = () => {
 
 const selectedSite = ref({});
 const siteList = ref([]);
-const noteImmList = ref([]);
+const noteList = ref([]);
 
 onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
@@ -75,7 +75,7 @@ onMounted(() => {
 
         <div class="col-12">
             <div class="card">
-                <DataTable :value="noteImmList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+                <DataTable :value="noteList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     tableStyle="min-width: 50rem">
                     <Column field="numOp" header="OPERATION" style="width: auto"></Column>
                     <Column field="site" header="NOMBRE DES DOSSIERS SAISIS" style="width: auto"></Column>

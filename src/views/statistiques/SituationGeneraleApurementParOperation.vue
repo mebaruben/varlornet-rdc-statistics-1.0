@@ -17,8 +17,8 @@ const load = () => {
     ;
 
     statistiqueDgiFinanciere.statFinanceTotaleApuresParOperation(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
-
-        noteImmList.value = response.data;
+        console.log(response.data);
+        noteList.value = response.data;
     })
 
 
@@ -29,10 +29,11 @@ const load = () => {
 
 const selectedSite = ref({});
 const siteList = ref([]);
-const noteImmList = ref([]);
+const noteList = ref([]);
 
 onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
+        
         siteList.value = response.data;
     })
 })
@@ -75,16 +76,19 @@ onMounted(() => {
 
         <div class="col-12">
             <div class="card">
-                <DataTable :value="noteImmList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+                <DataTable :value="noteList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     tableStyle="min-width: 50rem">
-                    <Column field="site" header="NATURE" style="width: auto"></Column>
-                    <Column field="noms" header="NOMBRE" style="width: auto"></Column>
-                    <Column field="numImpot" header="PART TRESOR" style="width: auto"></Column>
-                    <Column field="numImpot" header="PART DGI" style="width: auto"></Column>
-                    <Column field="numChassis" header="PART RTNC" style="width: auto"></Column>
-                    <Column field="numPlaque" header="PART UTSCH" style="width: auto"></Column>
-                    <Column field="genre" header="PART VALORNET" style="width: auto"></Column>
-                    <Column field="marque" header="TOTAL PAYE" style="width: auto"></Column> 
+                    <Column field="operation" header="OPERATION" style="width: auto"></Column>
+                    <Column field="part_tresor" header="TRESOR($)" style="width: auto"></Column> 
+                    <Column field="part_tresor_fc" header="TRESOR($)" style="width: auto"></Column> 
+                    <Column field="part_dgi" header="DGI($)" style="width: auto"></Column>
+                    <Column field="part_dgi_fc" header="DGI(FC)" style="width: auto"></Column>
+                    <Column field="part_rtnc" header="RTNC($)" style="width: auto"></Column>
+                    <Column field="part_rtnc_fc" header="RTNC(FC)" style="width: auto"></Column>
+                    <Column field="part_syntell" header="VALORNET" style="width: auto"></Column>
+                    <Column field="part_syntell_fc" header="VALORNET($)" style="width: auto"></Column>
+                    <Column field="montant_op" header="MONTANT($)" style="width: auto"></Column>
+                    <Column field="montant_op_fc" header="MONTANT(FC)" style="width: auto"></Column>
                 </DataTable>
             </div>
         </div>

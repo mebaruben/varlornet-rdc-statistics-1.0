@@ -13,6 +13,8 @@ const password = ref('');
 
 const checked = ref(false);
 
+const loading = ref(false);
+
 const adresseMac = "00-FF-22-7C-92-0E";
 const nomMachine = "DESKTOP-D8MJB89";
 
@@ -33,10 +35,11 @@ computed(() => {
 });
 
 function getUserConnected(email) {
-
+    loading.value=true;
     store.dispatch("auth/getUserConnected", email).then((response) => {
 
        if(response.status==200){
+           loading.value=false;
         router.push({ path: '/' })
        } 
         
@@ -45,6 +48,8 @@ function getUserConnected(email) {
         console.log(err)
         console.log(err.message);
         errorMsg.value = err.message;
+        email.value="";
+        password.value="";
     })
 
 }
@@ -101,7 +106,7 @@ const logoUrl = computed(() => {
                             <div class="flex align-items-center justify-content-between mb-5 gap-5">
 
                             </div>
-                            <Button label="Connexion" class="w-full p-3 text-xl" type="submit"></Button>
+                            <Button label="Connexion" class="w-full p-3 text-xl"  :loading="loading" type="submit"></Button>
                         </div>
                     </form>
                 </div>

@@ -1,0 +1,6 @@
+[ { "id": 1, "operation": "IMMATRICULATION", "data":{"emise": 3, "apure": 0, "valide": 2} }, 
+   { "id": 2, "operation": "MUTATION", "data":{"emise": 5, "apure": 0, "valide": 7} }, 
+   { "id": 3, "operation": "REIMMATRICULATION", "data":{"emise": 7, "apure": 0, "valide": 2} }, 
+   { "id": 4, "operation": "DUPLICATA", "data":{"emise": 8, "apure": 0, "valide": 2} }, 
+   { "id": 5, "operation": "IMMATRICULATION TEMPORAIRE", "data":{"emise": 3, "apure": 0, "valide": 1} },
+    { "id": 6, "operation": "CHANGEMENT D'ADRESSE", "data":{"emise": 3, "apure": 0, "valide": 2} } ]

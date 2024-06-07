@@ -20,14 +20,7 @@ export default defineConfig(() => {
             optionsSuccessStatus: 204,
             credentials:true,
           },
-          proxy: {
-            "/stat": {
-              target: process.env.VUE_APP_BASE_URL,
-              secure: false,
-              changeOrigin: true,
-              rewrite: (path) => {console.log(path); return path.replace(/^\/stat/, '')}
-            }
-          }
+          
         }
     };
 });

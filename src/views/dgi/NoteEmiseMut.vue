@@ -13,22 +13,19 @@ const load = () => {
 
     console.log(dashboardService.getDateFormat(dateDebut.value));
 
-    ;
-
     statistiqueDgiService.statNoteMutation(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
-
-        noteImmList.value = response.data;
+        console.log(response.data);
+        loading.value = false;
+        noteList.value = response.data;
     })
 
 
-    setTimeout(() => {
-        loading.value = false;
-    }, 2000);
+   // setTimeout(() => { loading.value = false; }, 2000);
 };
 
 const selectedSite = ref({});
 const siteList = ref([]);
-const noteImmList = ref([]);
+const noteList = ref([]);
 
 onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
@@ -51,7 +48,7 @@ onMounted(() => {
                     <template #value="slotProps">
                         <div v-if="slotProps.value" class="flex items-center">
 
-                            <div>{{ slotProps.value.name }}</div>
+                            <div>{{ slotProps.value.nom }}</div>
                         </div>
                         <span v-else>
                             {{ slotProps.placeholder }}
@@ -60,7 +57,7 @@ onMounted(() => {
                     <template #option="slotProps">
                         <div class="flex items-center">
 
-                            <div>{{ slotProps.option.name }}</div>
+                            <div>{{ slotProps.option.nom }}</div>
                         </div>
                     </template>
                 </Dropdown>
@@ -75,10 +72,11 @@ onMounted(() => {
             <div class="card">
                 <DataTable :value="noteList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     tableStyle="min-width: 50rem">
-                    <Column field="numOp" header="OPERATION" style="width: auto"></Column>
+                    <Column field="idOp" header="OPERATION" style="width: auto"></Column>
                     <Column field="site" header="SITE" style="width: auto"></Column>
-                    <Column field="noms" header="NOM OU RAISSON SOCIALE" style="width: auto"></Column>
-                    <Column field="numImpot" header="NIF" style="width: auto"></Column>
+                    <Column field="newProp" header="ANCIEN PROPRIETAIRE" style="width: auto"></Column>
+                    <Column field="oldProp" header="NOUVEAU PROPRIETAIRE" style="width: auto"></Column>
+                    <Column field="numImpotDgi" header="NIF" style="width: auto"></Column>
                     <Column field="numChassis" header="CHASSIS" style="width: auto"></Column>
                     <Column field="numPlaque" header="PLAQUE" style="width: auto"></Column>
                     <Column field="genre" header="GENRE" style="width: auto"></Column>

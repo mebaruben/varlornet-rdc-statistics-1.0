@@ -1,6 +1,8 @@
 <script setup>
 import { ref, watch  } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
+import datasource from '../data.json';
+import { data } from '../chartConfig';
 
 
 
@@ -12,9 +14,14 @@ let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
 const pieData = ref(null);
 const pieOptions = ref(null);
+const list=ref([]);
+
+datasource.forEach(item =>{
+   list.value= item.nature;
+})
 
 
-
+console.log(JSON.stringify(datasource));
 
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
@@ -27,10 +34,10 @@ const setChart = () => {
     
    // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
-        labels: ['Initiées', 'apurées', 'validées'],
+        labels: list.value.map(row =>row.libelle+"("+row.valeur+")"),
         datasets: [
             {
-                data: [20, 40,60],
+                data: list.value.map(row =>row.valeur),
                 backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
             }
