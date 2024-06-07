@@ -18,9 +18,9 @@ class StatistiqueDGI {
     statNoteMutation(idSite, dateDebut, dateFin) {
         let requete = '';
         if (idSite == '') {
-            requete = '/mut/' + dateDebut + '/' + dateFin;
+            requete = '/mutations/' + dateDebut + '/' + dateFin;
         } else {
-            requete = '/mut/' + idSite + '/' + dateDebut + '/' + dateFin;
+            requete = '/mutations/' + idSite + '/' + dateDebut + '/' + dateFin;
         }
         return axiosClient.get(requete).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
@@ -31,9 +31,9 @@ class StatistiqueDGI {
     statNoteREImmatriculation(idSite, dateDebut, dateFin) {
         let requete = '';
         if (idSite == 0) {
-            requete = '/con/' + dateDebut + '/' + dateFin;
+            requete = '/rei/' + dateDebut + '/' + dateFin;
         } else {
-            requete = '/con/' + idSite + '/' + dateDebut + '/' + dateFin;
+            requete = '/rei/' + idSite + '/' + dateDebut + '/' + dateFin;
         }
         return axiosClient.get(requete).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
@@ -56,7 +56,7 @@ class StatistiqueDGI {
 
     statNoteTemporaire(idSite, dateDebut, dateFin) {
         let requete = '';
-        if (idSite == 0) {
+        if (idSite == null) {
             requete = '/temporaires/' + dateDebut + '/' + dateFin;
         } else {
             requete = '/temporaires/' + idSite + '/' + dateDebut + '/' + dateFin;
@@ -71,9 +71,9 @@ class StatistiqueDGI {
     statNoteChangement(idSite, dateDebut, dateFin) {
         let requete = '';
         if (idSite == 0) {
-            requete = '/changement/' + dateDebut + '/' + dateFin;
+            requete = '/changements/' + dateDebut + '/' + dateFin;
         } else {
-            requete = '/changement/' + idSite + '/' + dateDebut + '/' + dateFin;
+            requete = '/changements/' + idSite + '/' + dateDebut + '/' + dateFin;
         }
         return axiosClient.get(requete).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })

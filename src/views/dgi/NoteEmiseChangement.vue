@@ -46,7 +46,7 @@ onMounted(() => {
                     <Calendar v-model="dateDebut" showIcon dateFormat="dd/mm/yy" />
 
                     <Calendar v-model="dateFin" showIcon dateFormat="dd/mm/yy" />
-                    <Dropdown v-model="selectedSite" :options="countries" filter optionLabel="name"
+                    <Dropdown v-model="selectedSite" :options="siteList" filter optionLabel="name"
                     placeholder="Select a Site" class="w-auto md:w-[14rem] ">
                     <template #value="slotProps">
                         <div v-if="slotProps.value" class="flex items-center">

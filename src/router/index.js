@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
-import store from '../store';
 import tokenService from '../service/token.service';
 
 const router = createRouter({
@@ -48,7 +47,28 @@ const router = createRouter({
                     path: '/dgi/note-temporaire',
                     name: 'note-temporaire',
                     component: () => import('@/views/dgi/NoteEmiseTemp.vue')
-                }
+                },
+
+                {
+                    path: '/statistiques/situation-generale-emise',
+                    name: 'situation-generale-emise',
+                    component: () => import('@/views/statistiques/SituationNotesEmises.vue')
+                },
+                {
+                    path: '/statistiques/situation-notes-apure',
+                    name: 'situation-notes-apure',
+                    component: () => import('@/views/statistiques/SituationNotesApures.vue')
+                },
+                {
+                    path: '/statistiques/situation-generale-apure',
+                    name: 'situation-generale-apure',
+                    component: () => import('@/views/statistiques/SituationGeneraleApurementParOperation.vue')
+                },
+                {
+                    path: '/statistiques/tableau-synthese-note',
+                    name: 'tableau-synthese-note',
+                    component: () => import('@/views/statistiques/TableauSyntheseNotesParOperation.vue')
+                },
             ]
         },
         {
