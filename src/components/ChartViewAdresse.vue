@@ -1,12 +1,10 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch , computed } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
+import datasource from '../data.json';
+import store from '../store';
 
-const props=defineProps({
-    chartCardOp:{
-        type:Object , require:true
-     }
-});
+
 
 const { layoutConfig } = useLayout();
 let documentStyle = getComputedStyle(document.documentElement);
@@ -16,8 +14,14 @@ let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
 const pieData = ref(null);
 const pieOptions = ref(null);
+const datalist=ref({});
+
+datalist.value=store.state.dashboard.chartPiedList.find(itemData => itemData.id===6);
+
+console.log(datalist.value)
 
 
+console.log(store.state.dashboard.chartPiedList);
 
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
@@ -27,12 +31,13 @@ const setColorOptions = () => {
 };
 
 const setChart = () => {
-
+    
+   // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
-        labels: ['Initiées', 'apurées', 'validées'],
+        labels: datalist.value.dataOp.map(row =>row.libelle+"("+row.valeur+")"),
         datasets: [
             {
-                data: [540, 325, 702],
+                data: datalist.value.dataOp.map(row =>row.valeur),
                 backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
             }
@@ -52,6 +57,8 @@ const setChart = () => {
 
 };
 
+
+
 watch(
     layoutConfig.theme,
     () => {
@@ -65,7 +72,7 @@ watch(
 <template>
         <div class="col-12 lg:col-6 xl:col-4">
             <div class="card flex flex-column align-items-center">
-                <h5 class="text-left w-full">Pie Chart</h5>
+                <h5 class="text-left w-full">CHANGEMENT D'ADRESSE</h5>
                 <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>   

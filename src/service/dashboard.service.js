@@ -75,32 +75,61 @@ class DashBoardService {
         let imm = {
             id: 1,
             operation: 'IMMATRICULATION',
-            emise: response.data['operations']['IMMATRICULATION'].emise,
-            apure: response.data['operations']['IMMATRICULATION'].apure_non_valide,
-            valide: response.data['operations']['IMMATRICULATION'].valide
+            dataOp: [
+                { libelle: 'emise', valeur: response.data['operations']['IMMATRICULATION'].emise },
+                { libelle: 'apure', valeur: response.data['operations']['IMMATRICULATION'].apure_non_valide },
+                { libelle: 'valide', valeur: response.data['operations']['IMMATRICULATION'].valide }
+            ]
         };
-        let mut = { id: 2, operation: 'MUTATION', emise: response.data['operations']['MUTATION'].emise, apure: response.data['operations']['MUTATION'].apure_non_valide, valide: response.data['operations']['MUTATION'].valide };
+        let mut = {
+            id: 2,
+            operation: 'MUTATION',
+            dataOp: [
+                { libelle: 'emise', valeur: response.data['operations']['MUTATION'].emise },
+                { libelle: 'apure', valeur: response.data['operations']['MUTATION'].apure_non_valide },
+                { libelle: 'valide', valeur: response.data['operations']['MUTATION'].valide }
+            ]
+        };
+
         let con = {
             id: 3,
             operation: 'REIMMATRICULATION',
-            emise: response.data['operations']['REIMMATRICULATION'].emise,
-            apure: response.data['operations']['REIMMATRICULATION'].apure_non_valide,
-            valide: response.data['operations']['REIMMATRICULATION'].valide
+            dataOp: [
+                { libelle: 'emise', valeur: response.data['operations']['REIMMATRICULATION'].emise },
+                { libelle: 'apure', valeur: response.data['operations']['REIMMATRICULATION'].apure_non_valide },
+                { libelle: 'valide', valeur: response.data['operations']['REIMMATRICULATION'].valide }
+            ]
         };
-        let dup = { id: 4, operation: 'DUPLICATA', emise: response.data['operations']['DUPLICATA'].emise, apure: response.data['operations']['DUPLICATA'].apure_non_valide, valide: response.data['operations']['DUPLICATA'].valide };
+        let dup = {
+            id: 4,
+            operation: 'DUPLICATA',
+            dataOp: [
+                { libelle: 'emise', valeur: response.data['operations']['DUPLICATA'].emise },
+                { libelle: 'apure', valeur: response.data['operations']['DUPLICATA'].apure_non_valide },
+                {
+                    libelle: 'valide',
+                    valeur: response.data['operations']['DUPLICATA'].valide
+                }
+            ]
+        };
+
         let it = {
             id: 5,
             operation: 'IMMATRICULATION TEMPORAIRE',
-            emise: response.data['operations']['IMMATRICULATION TEMPORAIRE'].emise,
-            apure: response.data['operations']['IMMATRICULATION TEMPORAIRE'].apure_non_valide,
-            valide: response.data['operations']['IMMATRICULATION TEMPORAIRE'].valide
+            dataOp: [
+                { libelle: 'emise', valeur: response.data['operations']['IMMATRICULATION TEMPORAIRE'].emise },
+                { libelle: 'apure', valeur: response.data['operations']['IMMATRICULATION TEMPORAIRE'].apure_non_valide },
+                { libelle: 'valide', valeur: response.data['operations']['IMMATRICULATION TEMPORAIRE'].valide }
+            ]
         };
         let change = {
             id: 6,
             operation: "CHANGEMENT D'ADRESSE",
-            emise: response.data['operations']["CHANGEMENT D'ADRESSE"].emise,
-            apure: response.data['operations']["CHANGEMENT D'ADRESSE"].apure_non_valide,
-            valide: response.data['operations']["CHANGEMENT D'ADRESSE"].valide
+            dataOp: [
+                { libelle: 'emise', valeur: response.data['operations']["CHANGEMENT D'ADRESSE"].emise },
+                { libelle: 'apure', valeur: response.data['operations']["CHANGEMENT D'ADRESSE"].apure_non_valide },
+                { libelle: 'valide', valeur: response.data['operations']["CHANGEMENT D'ADRESSE"].valide }
+            ]
         };
 
         // console.log(dataImm);

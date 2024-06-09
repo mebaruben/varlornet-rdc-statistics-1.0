@@ -6,6 +6,11 @@ import ChartView from '../components/ChartView.vue';
 import store from '../store';
 import dashboardService from '../service/dashboard.service';
 import tokenService from '../service/token.service';
+import ChartViewMut from '../components/ChartViewMut.vue';
+import ChartViewCon from '../components/ChartViewCon.vue';
+import ChartViewDup from '../components/ChartViewDup.vue';
+import ChartViewAdresse from '../components/ChartViewAdresse.vue';
+import ChartViewTemp from '../components/ChartViewTemp.vue';
 
 
 const cardDataList = ref([
@@ -253,17 +258,14 @@ watch(
 
         <CardView v-for="item in cardDataList" :cardData="item"></CardView>
 
-        <div class="grid grid-cols-3">
-            <div class="col-12 lg:col-6 xl:col-4">
-                <div class="card flex flex-column align-items-center">
-                    <h5 class="text-left w-full">{{ store.state.dashboard.chartPiedList }}</h5>
-                    <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
-                </div>
-            </div>
+        <div v-if="store.state.dashboard.chartPiedList.length != 0" class="grid grid-cols-3">
             <ChartView></ChartView>
-            <ChartView></ChartView>
-            <ChartView></ChartView>
-            <ChartView></ChartView>
+             <ChartViewMut></ChartViewMut>
+             <ChartViewCon></ChartViewCon>
+             <ChartViewDup></ChartViewDup>
+             <ChartViewAdresse></ChartViewAdresse>
+             <ChartViewTemp></ChartViewTemp>
+            
         </div>
     </div>
 </template>

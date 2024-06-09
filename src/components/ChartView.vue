@@ -1,8 +1,8 @@
 <script setup>
-import { ref, watch  } from 'vue';
+import { ref, watch , computed } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import datasource from '../data.json';
-import { data } from '../chartConfig';
+import store from '../store';
 
 
 
@@ -14,14 +14,14 @@ let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
 const pieData = ref(null);
 const pieOptions = ref(null);
-const list=ref([]);
+const datalist=ref({});
 
-datasource.forEach(item =>{
-   list.value= item.nature;
-})
+datalist.value=store.state.dashboard.chartPiedList.find(itemData => itemData.id===1);
+
+console.log(datalist.value)
 
 
-console.log(JSON.stringify(datasource));
+console.log(store.state.dashboard.chartPiedList);
 
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
@@ -34,10 +34,10 @@ const setChart = () => {
     
    // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
-        labels: list.value.map(row =>row.libelle+"("+row.valeur+")"),
+        labels: datalist.value.dataOp.map(row =>row.libelle+"("+row.valeur+")"),
         datasets: [
             {
-                data: list.value.map(row =>row.valeur),
+                data: datalist.value.dataOp.map(row =>row.valeur),
                 backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
             }
@@ -72,7 +72,7 @@ watch(
 <template>
         <div class="col-12 lg:col-6 xl:col-4">
             <div class="card flex flex-column align-items-center">
-                <h5 class="text-left w-full">Pie Chart</h5>
+                <h5 class="text-left w-full">NOUVELLE IMMATRICULATION</h5>
                 <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>   

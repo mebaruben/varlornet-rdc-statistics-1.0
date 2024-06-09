@@ -1,1 +1,6 @@
-[{ "id":1,"operation":"IMMATRICULATION","nature":[{"libelle":"emise" , "valeur":"8"} ,{"libelle":"apure" , "valeur":"6"} , {"libelle":"valide" , "valeur":"4"}]}]
+[ { "id": 1, "operation": "IMMATRICULATION", "dataOp": [ { "libelle": "emise", "valeur": 3 }, { "libelle": "apure", "valeur": 0 }, { "libelle": "valide", "valeur": 2 } ] },
+ { "id": 2, "operation": "MUTATION", "dataOp": [ { "libelle": "emise", "valeur": 2 }, { "libelle": "apure", "valeur": 0 }, { "libelle": "valide", "valeur": 2 } ] }, 
+ { "id": 3, "operation": "REIMMATRICULATION", "dataOp": [ { "libelle": "emise", "valeur": 0 }, { "libelle": "apure", "valeur": 0 }, { "libelle": "valide", "valeur": 0 } ] }, 
+ { "id": 4, "operation": "DUPLICATA", "dataOp": [ { "libelle": "emise", "valeur": 0 }, { "libelle": "apure", "valeur": 0 }, { "libelle": "valide", "valeur": 0 } ] }, 
+ { "id": 5, "operation": "IMMATRICULATION TEMPORAIRE", "dataOp": [ { "libelle": "emise", "valeur": 0 }, { "libelle": "apure", "valeur": 0 }, { "libelle": "valide", "valeur": 0 } ] },
+ { "id": 6, "operation": "CHANGEMENT D'ADRESSE", "dataOp": [ { "libelle": "emise", "valeur": 0 }, { "libelle": "apure", "valeur": 0 }, { "libelle": "valide", "valeur": 0 } ] } ]
