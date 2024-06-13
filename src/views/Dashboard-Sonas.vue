@@ -1,21 +1,19 @@
 <script setup>
-import { computed, onMounted , ref, watch } from 'vue';
+import { computed, onMounted, ref, watch , onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import CardView from './CardView.vue';
-import ChartView from '../components/ChartView.vue';
 import store from '../store';
-import dashboardService from '../service/dashboard.service';
+import dashboardSonasService from '../service/dashboard.sonas.service';
 import tokenService from '../service/token.service';
+import CardLoader from '../components/CardLoader.vue';
+import moment from 'moment/moment';
+import ChartViewNovelleAffaire from '../components/ChartViewNovelleAffaire.vue';
+import ChartViewFlotte from '../components/ChartViewFlotte.vue';
+import ChartViewRenouvellement from '../components/ChartViewRenouvellement.vue';
 
 
-const cardDataList = ref([
-    { id: 1, title: 'PLAQUE DISPONIBLES', nombre: 120, icon: "pi pi-car" },
-    { id: 2, title: 'PLAQUES RESERVEES', nombre: 120, icon: "pi pi-credit-card" },
-    { id: 3, title: 'NIM ET REI APUREES', nombre: 120, icon: "pi pi-credit-card" },
-    { id: 4, title: 'RECETTE REALISEES', nombre: 120, icon: "pi pi-dollar" },
-    { id: 5, title: 'RECETTE AUTRES OP.', nombre: 120, icon: "pi pi-dollar" },
+let cardDataList = [];
 
-]);
 
 const days = ref([
     { name: 'Live', nbre: 0 },
@@ -26,94 +24,130 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
-const userConnected=tokenService.getUser();
+const tous_site = ref(false);
+
+const userConnected = tokenService.getUser();
 
 console.log(userConnected.data)
 
 const { isDarkTheme } = useLayout();
 
+const checked = ref(false); 
 
+const loading = ref(false);
 
 const lineOptions = ref(null);
 
 
-const dateRech = "2024-01-22";
+const dateRech = new Date().getTime();
 
-const selectedSite = ref({});
-const selectedDay = ref({});
+const selectedSite = ref();
+const selectedDay = ref();
 const siteList = ref([]);
 
 
+const load = () => {
+    loading.value = true;
+    setTimeout(() => {
+        loading.value = false;
+    }, 5000);
+}
+
+onBeforeUnmount(() => {
+    
+  });
 
 computed(() => {
 
     mapState(["auth"]);
-    mapState(["dashboard"]);
+    mapState(["dashboard_assurance"]);
 
 });
 
 
 onMounted(() => {
-   
-    setColorOptions(),
-    setChart()
 
-     store.dispatch("auth/getUserConnected");
-     //
+    setInterval(load , 5000);
+
+    // dashboardService.appelServicePlaques(dateRech);
+    // dashboardService.appelServiceFinanceSite(dateRech);
+    cardDataList = dashboardSonasService.getCardDataDash(dashboardSonasService.getDateFormat(dateRech));
+    console.log("data : ", cardDataList);
+
+    //store.state.dashboard.getters.chartPiedList(dateRech);
+    store.dispatch("dashboard_assurance/appelServiceOperation", dashboardSonasService.getDateFormat(dateRech));
+
+    store.dispatch("auth/getUserConnected");
+    //
     //console.log("data computed: " + store.state.dashboard.chartPiedList);
-    dashboardService.getPrivilegesSites().then((response) => {
+    dashboardSonasService.getPrivilegesSites().then((response) => {
         siteList.value = response.data;
-    }) ;
+    });
+
 
 });
 
 //IMMATRICULATION  //
-let documentStyle = getComputedStyle(document.documentElement);
-let textColor = documentStyle.getPropertyValue('--text-color');
-let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-const pieData = ref(null);
-const pieOptions = ref(null);
 
-const setColorOptions = () => {
-    documentStyle = getComputedStyle(document.documentElement);
-    textColor = documentStyle.getPropertyValue('--text-color');
-    textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-};
+function getOnValueChangedDropdownSite(v) {
+    cardDataList = [];
 
- const setChart = () => {
-    // chartPiedCard=
-    pieData.value = {
-        labels: ['Initiées', 'apurées', 'validées'],
-        datasets: [
-            {
-                data: [540, 325, 702],
-                backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
-            }
-        ]
-    };
+    let payloadUser;
 
-    pieOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    usePointStyle: true,
-                    color: textColor
-                }
-            }
-        }
-    };
+    if (selectedDay.value == null || selectedDay.value.name == 'Live') {
 
-};
+        payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
+
+        console.log("valeur jour :", moment().subtract(0, 'days').format('yyyy-MM-DD'), v.id);
+        cardDataList = dashboardSonasService.getCardDataDashParSite(v.id, moment().subtract(0, 'days').format('yyyy-MM-DD'));
+        
+        store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite",  payloadUser);
+    } else {
+
+        payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
+        console.log("valeur jour :", moment().subtract(selectedDay.value.nbre, 'days').format('yyyy-MM-DD'), v.id);
+
+        cardDataList = dashboardSonasService.getCardDataDashParSite(v.id, dashboardSonasService.getDateFormat(dateRech));
+        
+        store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite",  payloadUser);
+    }
+
+}
+
+function getOnValueChangedDropdownDateRebours(v) {
+
+    cardDataList = [];
+    let payloadUser;
+
+    if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
+       
+        const idsite = 0;
+        payloadUser = { site: idsite, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
+
+        console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), idsite);
+
+        cardDataList = dashboardSonasService.getCardDataDashParSite(idsite, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+       
+       // store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
+       store.dispatch("dashboard_assurance/appelServiceOperation", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+    } else {
+        payloadUser = { site: selectedSite.value.id, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
+
+        console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), selectedSite.value);
+
+        cardDataList = dashboardSonasService.getCardDataDashParSite(selectedSite.value.id, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+       
+        store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite", payloadUser);
+    }
+
+
+}
+
+
 
 //MUTATION//
 
-const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-};
 const applyLightTheme = () => {
     lineOptions.value = {
         plugins: {
@@ -192,59 +226,69 @@ watch(
     <div class="grid ">
 
         <div class="col-12">
-            <div class="card flex justify-center flex-wrap gap-1">
-                    <div class="flex gap-3 mt-1">
-                       
-                <Dropdown v-model="selectedSite" :options="siteList" filter optionLabel="name"
-                    placeholder="Select a Site" class="w-full md:w-[14rem] ">
-                    <template #value="slotProps">
-                        <div v-if="slotProps.value" class="flex items-center">
 
-                            <div>{{ slotProps.value.nom }}</div>
-                        </div>
-                        <span v-else>
-                            {{ slotProps.placeholder }}
-                        </span>
-                    </template>
-                    <template #option="slotProps">
-                        <div class="flex items-center">
+            <div class="card flex flex-wrap justify-content-start gap-3">
+                <div class="flex align-items-center">
+                    <Dropdown placeholder="Select a Site" v-model="selectedSite" :options="siteList" :filter="true"
+                        optionLabel="nom" @update:modelValue="getOnValueChangedDropdownSite"
+                        class="w-full md:w-[14rem] ">
+                        <template #value="slotProps">
+                            <div v-if="slotProps.value" class="flex items-center">
+                                <div>{{ slotProps.value.nom }}</div>
+                            </div>
+                            <span v-else>
+                                {{ slotProps.placeholder }}
+                            </span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex items-center">
 
-                            <div>{{ slotProps.option.nom }}</div>
-                        </div>
-                    </template>
-                </Dropdown>
-
-                <Dropdown v-model="selectedDay" :options="days" optionLabel="name" placeholder="Select a Day"
-                    class="w-full md:w-[14rem] ">
-                    <template #value="slotProps">
-                        <div v-if="slotProps.value" class="flex items-center">
-
-                            <div>{{ slotProps.value.name }}</div>
-                        </div>
-                        <span v-else>
-                            {{ slotProps.placeholder }}
-                        </span>
-                    </template>
-                    <template #option="slotProps">
-                        <div class="flex items-center">
-
-                            <div>{{ slotProps.option.name }}</div>
-                        </div>
-                    </template>
-                </Dropdown>
-            </div>
-                    
+                                <div>{{ slotProps.option.nom }}</div>
+                            </div>
+                        </template>
+                    </Dropdown>
                 </div>
+                <div class="flex align-items-center">
+                    <Dropdown v-model="selectedDay" :options="days" optionLabel="name" placeholder="Select a Day"
+                        selected class="w-full md:w-[14rem] " @update:modelValue="getOnValueChangedDropdownDateRebours">
+                        <template #value="slotProps">
+                            <div v-if="slotProps.value" class="flex items-center">
+
+                                <div>{{ slotProps.value.name }}</div>
+                            </div>
+                            <span v-else>
+                                {{ slotProps.placeholder }}
+                            </span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex items-center">
+
+                                <div>{{ slotProps.option.name }}</div>
+                            </div>
+                        </template>
+                    </Dropdown>
+                </div>
+                <div class="flex align-items-center">
+                    <Button text  icon="pi pi-search" :loading="loading"  ></Button>
+                </div>
+            </div>
+
         </div>
 
-        <CardView v-for="item in cardDataList" :cardData="item"></CardView>
+        <CardView v-if="cardDataList.length != 0 && store.state.dashboard_assurance.chartPiedList.length != 0"
+            v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
+        </CardView>
 
-        <div class="grid grid-cols-3">
+        <div v-if="store.state.dashboard_assurance.chartPiedList.length != 0 && cardDataList.length != 0" class="grid grid-cols-3">
+
+            <ChartViewNovelleAffaire></ChartViewNovelleAffaire>
+            <ChartViewFlotte></ChartViewFlotte>
+            <ChartViewRenouvellement></ChartViewRenouvellement>
             
-            <ChartView></ChartView>
-            <ChartView></ChartView>
-            <ChartView></ChartView>
-            <ChartView></ChartView>
+
+        </div>
+        <div v-else class="card flex justify-center">
+            <CardLoader></CardLoader>
         </div>
     </div>
 </template>

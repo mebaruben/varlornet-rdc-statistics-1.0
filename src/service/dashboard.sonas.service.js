@@ -1,7 +1,7 @@
 import api from '../service/api';
 import moment from 'moment';
 
-class DashBoardService {
+class DashBoardServiceSonas {
     getDateDashboard(nombreJour) {
         var date = new Date();
         local.setDate(date + nombreJour);
@@ -21,10 +21,10 @@ class DashBoardService {
         });
     }
 
-    appelServiceOperationParDateRechEtParSite(dateRech , site) {
-        return api.get('/dash/notes/'+site+'/'+ dateRech).then((response) => {
+    appelServiceOperationParDateRechEtParSite(dateRech, site) {
+        return api.get('/dash/notes/' + site + '/' + dateRech).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
-            console.log("response appelServiceOperationParDateRechEtParSite : " ,response.data );
+            console.log('response appelServiceOperationParDateRechEtParSite : ', response.data);
             return response;
         });
     }
@@ -79,77 +79,32 @@ class DashBoardService {
     }
 
     getDateDashboardList(response) {
-
-        console.log("data response : " , response.data)
+        console.log('data response : ', response.data);
 
         let list = [];
         let imm = {
             id: 1,
-            operation: 'IMMATRICULATION',
+            operation: 'NOUVELLE AFFAIRE',
             dataOp: [
-                { libelle: 'emise', valeur: response.data['operations']['IMMATRICULATION'].emise },
-                { libelle: 'apure', valeur: response.data['operations']['IMMATRICULATION'].apure_non_valide },
-                { libelle: 'valide', valeur: response.data['operations']['IMMATRICULATION'].valide }
+                { libelle: 'emise', valeur: response.data['operations']['NOUVELLE AFFAIRE'].emise },
+                { libelle: 'apure', valeur: response.data['operations']['NOUVELLE AFFAIRE'].apure_non_valide },
+                { libelle: 'valide', valeur: response.data['operations']['NOUVELLE AFFAIRE'].valide }
             ]
         };
         let mut = {
             id: 2,
-            operation: 'MUTATION',
+            operation: 'FLOTTE',
             dataOp: [
-                { libelle: 'emise', valeur: response.data['operations']['MUTATION'].emise },
-                { libelle: 'apure', valeur: response.data['operations']['MUTATION'].apure_non_valide },
-                { libelle: 'valide', valeur: response.data['operations']['MUTATION'].valide }
-            ]
-        };
-
-        let con = {
-            id: 3,
-            operation: 'REIMMATRICULATION',
-            dataOp: [
-                { libelle: 'emise', valeur: response.data['operations']['REIMMATRICULATION'].emise },
-                { libelle: 'apure', valeur: response.data['operations']['REIMMATRICULATION'].apure_non_valide },
-                { libelle: 'valide', valeur: response.data['operations']['REIMMATRICULATION'].valide }
-            ]
-        };
-        let dup = {
-            id: 4,
-            operation: 'DUPLICATA',
-            dataOp: [
-                { libelle: 'emise', valeur: response.data['operations']['DUPLICATA'].emise },
-                { libelle: 'apure', valeur: response.data['operations']['DUPLICATA'].apure_non_valide },
-                {
-                    libelle: 'valide',
-                    valeur: response.data['operations']['DUPLICATA'].valide
-                }
-            ]
-        };
-
-        let it = {
-            id: 5,
-            operation: 'IMMATRICULATION TEMPORAIRE',
-            dataOp: [
-                { libelle: 'emise', valeur: response.data['operations']['IMMATRICULATION TEMPORAIRE'].emise },
-                { libelle: 'apure', valeur: response.data['operations']['IMMATRICULATION TEMPORAIRE'].apure_non_valide },
-                { libelle: 'valide', valeur: response.data['operations']['IMMATRICULATION TEMPORAIRE'].valide }
-            ]
-        };
-        let change = {
-            id: 6,
-            operation: "CHANGEMENT D'ADRESSE",
-            dataOp: [
-                { libelle: 'emise', valeur: response.data['operations']["CHANGEMENT D'ADRESSE"].emise },
-                { libelle: 'apure', valeur: response.data['operations']["CHANGEMENT D'ADRESSE"].apure_non_valide },
-                { libelle: 'valide', valeur: response.data['operations']["CHANGEMENT D'ADRESSE"].valide }
+                { libelle: 'emise', valeur: 0 },
+                { libelle: 'apure', valeur: 0 },
+                { libelle: 'valide', valeur: 0 }
             ]
         };
 
         // console.log(dataImm);
         list.push(imm);
         list.push(mut);
-        list.push(con);
-        list.push(dup);
-        list.push(it);
-        list.push(change);
+
         console.log(list.length);
         console.log(list);
         return list;
@@ -171,18 +126,16 @@ class DashBoardService {
         console.log('Date now ', dateRech);
 
         api.get('/finances/dash/' + dateRech).then((response) => {
-
             console.log(response);
 
-            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? response.data.dgi.total : 0, icon: 'pi pi-dollar' });
+            list.push({ id: 4, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('sonas') ? response.data.sonas.total : 0, icon: 'pi pi-dollar' });
         });
 
-        api.get('/dash/plaques/' + dateRech).then((response) => {
+        api.get('/dash/notes/' + dateRech).then((response) => {
             console.log(response);
-            list.push({ id: 1, title: 'PLAQUES DISPONIBLES', nombre: response.data.dispo, icon: 'pi pi-car' });
-            list.push({ id: 2, title: 'PLAQUES RESERVEES', nombre: response.data.reserve_non_attribue, icon: 'pi pi-car' });
-            list.push({ id: 3, title: 'PLAQUES ATTRIBUEES', nombre: response.data.attribue, icon: 'pi pi-car' });
-            list.push({ id: 4, title: 'NIM ET REI APUREES', nombre: response.data.attribue, icon: 'pi pi-dollar' });
+            list.push({ id: 1, title: 'OPERATION INITIEES', nombre: response.data['operations']['NOUVELLE AFFAIRE'].emise, icon: 'pi pi-car' });
+            list.push({ id: 2, title: 'OPERATIONS APUREES', nombre: response.data['operations']['NOUVELLE AFFAIRE'].apure_non_valide, icon: 'pi pi-car' });
+            list.push({ id: 3, title: 'OPERATIONS VALIDEES', nombre: response.data['operations']['NOUVELLE AFFAIRE'].valide, icon: 'pi pi-car' });
             console.log(list);
         });
 
@@ -195,15 +148,14 @@ class DashBoardService {
         let requetePiedChart;
 
         if (site != 0) {
-            requeteCard = '/dash/plaques/' + site + '/' + dateRech;
+            requeteCard = '/dash/notes/' + site + '/' + dateRech;
             requetePiedChart = '/finances/dash/' + site + '/' + dateRech;
-            
         } else {
-            requeteCard = '/dash/plaques/' + dateRech;
+            requeteCard = '/dash/notes/' + dateRech;
             requetePiedChart = '/finances/dash/' + dateRech;
         }
 
-        console.log(requeteCard, site, dateRech , requetePiedChart);
+        console.log(requeteCard, site, dateRech, requetePiedChart);
         // requeteCard='/dash/plaques/' + dateRech
         //  requetePiedChart='/finances/dash/' + dateRech
         // if(asSite != true){ requetePiedChart='/finances/dash/'+idSite+'/' + dateRech }else{ requetePiedChart='/finances/dash/' + dateRech   }
@@ -213,15 +165,14 @@ class DashBoardService {
         api.get(requetePiedChart).then((response) => {
             console.log(response);
 
-            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? response.data.dgi.total : 0, icon: 'pi pi-dollar' });
+            list.push({ id: 4, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('sonas') ? response.data.sonas.total : 0, icon: 'pi pi-dollar' });
         });
 
         api.get(requeteCard).then((response) => {
             console.log(response);
-            list.push({ id: 1, title: 'PLAQUES DISPONIBLES', nombre: response.data.dispo, icon: 'pi pi-car' });
-            list.push({ id: 2, title: 'PLAQUES RESERVEES', nombre: response.data.reserve_non_attribue, icon: 'pi pi-car' });
-            list.push({ id: 3, title: 'PLAQUES ATTRIBUEES', nombre: response.data.attribue, icon: 'pi pi-car' });
-            list.push({ id: 4, title: 'NIM ET REI APUREES', nombre: response.data.attribue, icon: 'pi pi-dollar' });
+            list.push({ id: 1, title: 'OPERATION INITIEES', nombre: response.data['operations']['NOUVELLE AFFAIRE'].emise, icon: 'pi pi-car' });
+            list.push({ id: 2, title: 'OPERATIONS APUREES', nombre: response.data['operations']['NOUVELLE AFFAIRE'].apure_non_valide, icon: 'pi pi-car' });
+            list.push({ id: 3, title: 'OPERATIONS VALIDEES', nombre: response.data['operations']['NOUVELLE AFFAIRE'].valide, icon: 'pi pi-car' });
             console.log(list);
         });
 
@@ -235,4 +186,4 @@ class DashBoardService {
         });
     }
 }
-export default new DashBoardService();
+export default new DashBoardServiceSonas();

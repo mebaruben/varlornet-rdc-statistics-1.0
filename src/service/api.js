@@ -2,12 +2,11 @@ import axios from 'axios';
 import store from '../store';
 
 const axiosClient = axios.create({
-    //baseURL:"https://api.valornet-rdc.com/StatINV/stat/"
+    baseURL:"https://api.valornet-rdc.com/StatINV/stat/",
     //https://api.valornet-rdc.com/StatINV/stat/test/
     //"https://192.168.111.3:8080/stat"
     //"http://192.168.0.62:51782/stat"
-
-    baseURL: "http://192.168.111.3:8080/stat",
+    //baseURL: "http://192.168.111.3:8080/stat",
 
     withCredentials: true
 });
@@ -33,7 +32,7 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        console.log(error);
+        console.log("error exception :" , error);
         if (error.response) {
             if (error.response.status === 401) {
                 console.log(error.response.data)
@@ -41,7 +40,7 @@ axiosClient.interceptors.response.use(
                 console.log(error.response.data)
             } else if (error.response.status === 500) {
                 console.log(error.response.data)
-            }el
+            }
         }
         return Promise.reject(error);
     }

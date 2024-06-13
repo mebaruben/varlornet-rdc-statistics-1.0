@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
 import tokenService from '../service/token.service';
+import store from '../store';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -18,6 +19,22 @@ const router = createRouter({
                         requiresAuth: true // Add meta field to indicate protected route
                       }
                 },
+                {
+                    path: '/dashboard-assurance',
+                    name: 'dashboard-assurance',
+                    component: () => import('@/views/Dashboard-Sonas.vue')
+                },
+                {
+                    path: '/dashboard-rtnc',
+                    name: 'dashboard-rtnc',
+                    component: () => import('@/views/Dashboard-rtnc.vue')
+                },
+                {
+                    path: '/valornet/dashboard-valornet',
+                    name: 'dashboard-valornet',
+                    component: () => import('@/views/valornet/Dashboard-valornet.vue')
+                }
+                ,
                 {
                     path: '/dgi/note-immatriculation',
                     name: 'note-immatriculation',
@@ -98,15 +115,13 @@ const router = createRouter({
     ]
 });
 
-// GOOD
+
   router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
       const token = tokenService.getLocalAccessToken();
       console.log('token router : '+JSON.stringify(token).toString());
-      if (token!=null) {
-        // User is authenticated, proceed to the route
-        console.log('naza na kati ya router');
-       // store.dispatch("auth/getToken");
+      if (token!=null) {  
+       // store.dispatch("auth/getToken");  
         next();
       } else {
         // User is not authenticated, redirect to login
@@ -114,7 +129,7 @@ const router = createRouter({
       }
     } else {
       // Non-protected route, allow access
-      next();
+      next('/login');
     }
   });
   

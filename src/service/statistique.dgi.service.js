@@ -70,7 +70,7 @@ class StatistiqueDGI {
 
     statNoteChangement(idSite, dateDebut, dateFin) {
         let requete = '';
-        if (idSite == 0) {
+        if (idSite == null) {
             requete = '/changements/' + dateDebut + '/' + dateFin;
         } else {
             requete = '/changements/' + idSite + '/' + dateDebut + '/' + dateFin;

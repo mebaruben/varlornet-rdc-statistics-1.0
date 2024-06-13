@@ -101,7 +101,7 @@ const isOutsideClicked = (event) => {
 
         <router-link to="/" class="layout-topbar-logo">
             <img src="/demo/images/login/inv.png" alt="logo" />
-            <span class="text-lg">INV-STATISTICS 1.0</span>
+            <span class="text-lg">INV-STATISTICS 2.0</span>
         </router-link>
 
         <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
@@ -123,8 +123,8 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <span class="text-lg ">{{ userConnected.data.nom }} -{{ userConnected.data.postnom}}-{{ userConnected.data.prenom }}</span>
-            <Button type="button" label="Deconnexion" icon="pi pi-search" :loading="loading"
+            <span class="text-md py-3">{{ userConnected.data.nom }} -{{ userConnected.data.postnom}}-{{ userConnected.data.prenom }}</span>
+            <Button type="button" label="Deconnexion" icon="pi pi-close" :loading="loading"
                 @click="openConfirmation()">
             </Button>
 

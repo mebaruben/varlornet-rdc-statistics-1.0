@@ -68,9 +68,9 @@ const model_admin = ref([
         items: [
             
         { label: 'DGI', icon: 'pi pi-fw pi-home', to: '/' , module:1 } ,
-        { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/' ,module:2 } ,
-        { label: 'VARLORNET', icon: 'pi pi-fw pi-home', to: '/' , module:3 } ,
-        { label: 'RTNC', icon: 'pi pi-fw pi-home', to: '/' , module:4 } ,
+        { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/assurance/dashboard-assurance' ,module:2 } ,
+        { label: 'CARTE ROSE', icon: 'pi pi-fw pi-home', to: '/valornet/dashboard-valornet' , module:3 } ,
+        { label: 'RTNC', icon: 'pi pi-fw pi-home', to: '/rtnc/dashboard-rtnc' , module:4 } ,
 
         ]
     },
@@ -179,7 +179,7 @@ const model_sonas = ref([
     {
         label: 'Dashboard',
         items: [   
-        { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/' ,module:2 } ,
+        { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/dashboard-assurance' ,module:2 } ,
         ]
     },
     {

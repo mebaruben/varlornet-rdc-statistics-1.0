@@ -1,5 +1,5 @@
 //import AuthService from '../service/'
-import dashboardService from '../service/dashboard.service';
+import dashboardSonasService from "../service/dashboard.sonas.service";
 
 export default {
     namespaced: true,
@@ -87,8 +87,8 @@ export default {
         appelServiceOperation({ commit }, dateRech) {
             let list=[];
             commit('removeChartPiedList');
-            return dashboardService.appelServiceOperation(dateRech).then(response => {
-                dashboardService.getDateDashboardList(response).forEach((item) => {
+            return dashboardSonasService.appelServiceOperation(dateRech).then(response => {
+                dashboardSonasService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
                 })
@@ -102,9 +102,9 @@ export default {
             console.log("data store : " ,payloadUser.dateRech , payloadUser.site )
             let list=[];
             commit('removeChartPiedList');
-            return dashboardService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech ,payloadUser.site).then(response => {
+            return dashboardSonasService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech ,payloadUser.site).then(response => {
                 console.log("data store : " ,response )
-                dashboardService.getDateDashboardList(response).forEach((item) => {
+                dashboardSonasService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
                 })

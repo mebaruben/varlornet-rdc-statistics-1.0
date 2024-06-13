@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch , onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import CardView from './CardView.vue';
 import ChartView from '../components/ChartView.vue';
@@ -11,16 +11,12 @@ import ChartViewCon from '../components/ChartViewCon.vue';
 import ChartViewDup from '../components/ChartViewDup.vue';
 import ChartViewAdresse from '../components/ChartViewAdresse.vue';
 import ChartViewTemp from '../components/ChartViewTemp.vue';
+import CardLoader from '../components/CardLoader.vue';
+import moment from 'moment/moment';
 
 
-const cardDataList = ref([
-    { id: 1, title: 'PLAQUE DISPONIBLES', nombre: 120, icon: "pi pi-car" },
-    { id: 2, title: 'PLAQUES RESERVEES', nombre: 120, icon: "pi pi-credit-card" },
-    { id: 3, title: 'NIM ET REI APUREES', nombre: 120, icon: "pi pi-credit-card" },
-    { id: 4, title: 'RECETTE REALISEES', nombre: 120, icon: "pi pi-dollar" },
-    { id: 5, title: 'RECETTE AUTRES OP.', nombre: 120, icon: "pi pi-dollar" },
+let cardDataList = [];
 
-]);
 
 const days = ref([
     { name: 'Live', nbre: 0 },
@@ -31,24 +27,38 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
+const tous_site = ref(false);
+
 const userConnected = tokenService.getUser();
 
 console.log(userConnected.data)
 
 const { isDarkTheme } = useLayout();
 
+const checked = ref(false); 
 
+const loading = ref(false);
 
 const lineOptions = ref(null);
 
 
-const dateRech = "2024-01-22";
+const dateRech = new Date().getTime();
 
-const selectedSite = ref({});
-const selectedDay = ref({});
+const selectedSite = ref();
+const selectedDay = ref();
 const siteList = ref([]);
 
 
+const load = () => {
+    loading.value = true;
+    setTimeout(() => {
+        loading.value = false;
+    }, 5000);
+}
+
+onBeforeUnmount(() => {
+    
+  });
 
 computed(() => {
 
@@ -60,21 +70,15 @@ computed(() => {
 
 onMounted(() => {
 
-    if (userConnected.data.module == '2') {
-        
-        dashboardService.appelServicePlaques(dateRech);
-        dashboardService.appelServiceFinanceSite(dateRech);
-        setColorOptions(),
-            setChart()
-        //store.state.dashboard.getters.chartPiedList(dateRech);
-        store.dispatch("dashboard/appelServiceOperation", dateRech);
+    setInterval(load , 5000);
 
-    }
-    else if (userConnected.data.module == '3') {
+    // dashboardService.appelServicePlaques(dateRech);
+    // dashboardService.appelServiceFinanceSite(dateRech);
+    cardDataList = dashboardService.getCardDataDash(dashboardService.getDateFormat(dateRech));
+    console.log("data : ", cardDataList);
 
-    }
-
-
+    //store.state.dashboard.getters.chartPiedList(dateRech);
+    store.dispatch("dashboard/appelServiceOperation", dashboardService.getDateFormat(dateRech));
 
     store.dispatch("auth/getUserConnected");
     //
@@ -87,52 +91,66 @@ onMounted(() => {
 });
 
 //IMMATRICULATION  //
-let documentStyle = getComputedStyle(document.documentElement);
-let textColor = documentStyle.getPropertyValue('--text-color');
-let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-const pieData = ref(null);
-const pieOptions = ref(null);
 
-const setColorOptions = () => {
-    documentStyle = getComputedStyle(document.documentElement);
-    textColor = documentStyle.getPropertyValue('--text-color');
-    textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-};
+function getOnValueChangedDropdownSite(v) {
+    cardDataList = [];
 
-const setChart = () => {
-    // chartPiedCard=
-    pieData.value = {
-        labels: ['Initiées', 'apurées', 'validées'],
-        datasets: [
-            {
-                data: [540, 325, 702],
-                backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
-            }
-        ]
-    };
+    let payloadUser;
 
-    pieOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    usePointStyle: true,
-                    color: textColor
-                }
-            }
-        }
-    };
+    if (selectedDay.value == null || selectedDay.value.name == 'Live') {
 
-};
+        payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
+
+        console.log("valeur jour :", moment().subtract(0, 'days').format('yyyy-MM-DD'), v.id);
+        cardDataList = dashboardService.getCardDataDashParSite(v.id, moment().subtract(0, 'days').format('yyyy-MM-DD'));
+        
+        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite",  payloadUser);
+    } else {
+
+        payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
+        console.log("valeur jour :", moment().subtract(selectedDay.value.nbre, 'days').format('yyyy-MM-DD'), v.id);
+
+        cardDataList = dashboardService.getCardDataDashParSite(v.id, dashboardService.getDateFormat(dateRech));
+        
+        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite",  payloadUser);
+    }
+
+}
+
+function getOnValueChangedDropdownDateRebours(v) {
+
+    cardDataList = [];
+    let payloadUser;
+
+    if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
+       
+        const idsite = 0;
+        payloadUser = { site: idsite, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
+
+        console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), idsite);
+
+        cardDataList = dashboardService.getCardDataDashParSite(idsite, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+       
+       // store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
+       store.dispatch("dashboard/appelServiceOperation", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+    } else {
+        payloadUser = { site: selectedSite.value.id, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
+
+        console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), selectedSite.value);
+
+        cardDataList = dashboardService.getCardDataDashParSite(selectedSite.value.id, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+       
+        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
+    }
+
+
+}
+
+
 
 //MUTATION//
 
-const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-};
 const applyLightTheme = () => {
     lineOptions.value = {
         plugins: {
@@ -211,14 +229,14 @@ watch(
     <div class="grid ">
 
         <div class="col-12">
-            <div class="card flex justify-center flex-wrap gap-1">
-                <div class="flex gap-3 mt-1">
 
-                    <Dropdown v-model="selectedSite" :options="siteList" filter optionLabel="name"
-                        placeholder="Select a Site" class="w-full md:w-[14rem] ">
+            <div class="card flex flex-wrap justify-content-start gap-3">
+                <div class="flex align-items-center">
+                    <Dropdown placeholder="Select a Site" v-model="selectedSite" :options="siteList" :filter="true"
+                        optionLabel="nom" @update:modelValue="getOnValueChangedDropdownSite"
+                        class="w-full md:w-[14rem] ">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex items-center">
-
                                 <div>{{ slotProps.value.nom }}</div>
                             </div>
                             <span v-else>
@@ -232,9 +250,10 @@ watch(
                             </div>
                         </template>
                     </Dropdown>
-
+                </div>
+                <div class="flex align-items-center">
                     <Dropdown v-model="selectedDay" :options="days" optionLabel="name" placeholder="Select a Day"
-                        class="w-full md:w-[14rem] ">
+                        selected class="w-full md:w-[14rem] " @update:modelValue="getOnValueChangedDropdownDateRebours">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex items-center">
 
@@ -252,20 +271,28 @@ watch(
                         </template>
                     </Dropdown>
                 </div>
-
+                <div class="flex align-items-center">
+                    <Button text  icon="pi pi-search" :loading="loading"  ></Button>
+                </div>
             </div>
+
         </div>
 
-        <CardView v-for="item in cardDataList" :cardData="item"></CardView>
+        <CardView v-if="cardDataList.length != 0 && store.state.dashboard.chartPiedList.length != 0"
+            v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
+        </CardView>
 
-        <div v-if="store.state.dashboard.chartPiedList.length != 0" class="grid grid-cols-3">
+        <div v-if="store.state.dashboard.chartPiedList.length != 0 && cardDataList.length != 0" class="grid grid-cols-3">
             <ChartView></ChartView>
-             <ChartViewMut></ChartViewMut>
-             <ChartViewCon></ChartViewCon>
-             <ChartViewDup></ChartViewDup>
-             <ChartViewAdresse></ChartViewAdresse>
-             <ChartViewTemp></ChartViewTemp>
-            
+            <ChartViewMut></ChartViewMut>
+            <ChartViewCon></ChartViewCon>
+            <ChartViewDup></ChartViewDup>
+            <ChartViewAdresse></ChartViewAdresse>
+            <ChartViewTemp></ChartViewTemp>
+
+        </div>
+        <div v-else class="card flex justify-center">
+            <CardLoader></CardLoader>
         </div>
     </div>
 </template>

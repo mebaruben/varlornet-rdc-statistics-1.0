@@ -35,16 +35,24 @@ computed(() => {
 });
 
 function getUserConnected(email) {
-    loading.value=true;
+    
     store.dispatch("auth/getUserConnected", email).then((response) => {
-
-       if(response.status==200){
-           loading.value=false;
+        
+       console.log('data user get User connected ' , response.data);
+       loading.value=false;
+       if(response.data.module=='2'){
         router.push({ path: '/' })
-       } 
+       } else if(response.data.module=='3'){
+        router.push({ path: '/dashboard-assurance' })
+       }else if(response.data.module=='7'){
+        router.push({ path: '/dashboard-rtnc' })
+       }else{
+        router.push({ path: '/login' })
+       }
         
 
     }).catch(err => {
+        loading.value=false;
         console.log(err)
         console.log(err.message);
         errorMsg.value = err.message;
@@ -61,11 +69,14 @@ function auth() {
 
     user = { login: email.value, password: password.value, adresseMac, nomMachine }
 
+    loading.value=true;
+
     store.dispatch("auth/login", user).then(() => {
 
         getUserConnected(email);
 
     }).catch(err => {
+        loading.value=false;
         console.log(err)
         console.log(err.message);
         errorMsg.value = err.message;

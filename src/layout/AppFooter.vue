@@ -11,9 +11,9 @@ const logoUrl = computed(() => {
 
 <template>
     <div class="layout-footer">
-        <img src="/demo/images/login/inv.png" alt="Logo" height="20" class="mr-2" />
-        by
-        <span class="font-medium ml-2">Valornet-rdc</span>
+        <img src="/demo/images/login/logo_inv.png" alt="Logo" height="20" class="mr-2" />
+        
+        <span class="font-medium ml-2">&copy;Copyright  Valornet rdc 2024</span>
     </div>
 </template>
 <style lang="scss" scoped></style>

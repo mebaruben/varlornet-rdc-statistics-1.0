@@ -15,12 +15,15 @@ const pieData = ref(null);
 const pieOptions = ref(null);
 const datalist=ref({});
 
-datalist.value=store.state.dashboard.chartPiedList.find(itemData => itemData.id===1);
+datalist.value=store.state.dashboard_assurance.chartPiedList.find(itemData => itemData.id===1);
 
-console.log(datalist.value)
+datalist.value.dataOp.forEach(element => {
+    console.log("data store pied chart :" ,element.libelle , element.valeur)
+});
 
 
-console.log(store.state.dashboard.chartPiedList);
+
+console.log(" data store : " ,store.state.dashboard_assurance.chartPiedList);
 
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
@@ -71,7 +74,7 @@ watch(
 <template>
         <div class="col-12 lg:col-6 xl:col-4">
             <div class="card flex flex-column align-items-center">
-                <h5 class="text-left w-full">NOUVELLE IMMATRICULATION</h5>
+                <h5 class="text-left w-full">NOUVELLE AFFAIRE</h5>
                 <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>   
