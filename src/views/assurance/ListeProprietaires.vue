@@ -1,72 +1,33 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import dashboardService from '../../service/dashboard.service';
-import statistiqueDgiService from '../../service/statistique.dgi.service';
+import statistiqueSonasService from '../../service/statistique.sonas.service';
 
 const dateDebut = ref(null);
 const dateFin = ref(null);
 const loading = ref(false);
 
-let JsonData;
-
 const load = () => {
-    console.log(dateDebut.value, dateFin.value, selectedSite.value.id)
+    
     loading.value = true;
 
     console.log(dashboardService.getDateFormat(dateDebut.value));
 
-    statistiqueDgiService.statNoteImmatriculation(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
+    let idsite = selectedSite.value !=null ? selectedSite.value.id : '0'
+
+    console.log(dateDebut.value, dateFin.value, idsite)
+
+    statistiqueSonasService.statListeVehiculesProprietaires(idsite, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
+        console.log(response.data);
         loading.value = false;
         noteList.value = response.data;
-        JsonData=response.data;
-        
     })
 
 
-    // setTimeout(() => { loading.value = false;}, 2000);
-};
-
-const dt = ref();
-
-function FormatJson(FilterData , JsonData){
-
-    return JsonData.map((v)=> FilterData.map((j=>{
-       console.log(v[j]);
-        return v[j];
-    })))
+    //setTimeout(() => {}, 2000);
 }
 
-
-
-const exportCSV = () => {
-    console.log(JsonData);
-
-    import('../../Export2Excel').then((excel)=>{
-       
-        console.log("Bonjour expor");
-        //header in excel
-        const Header=["AGENT" , "GENRE","MARQUE","MODELE","NOM & RAISON SOCIALE","NUMERO IMPOTE","OPERATION","PLAQUE" , "SITE"];
-       //Field for map with ob data json
-        const Field=["agent","genre" ,"marque","modele","noms","numChassis" ,"numImpot","numOp" , "numPlaque" ,"site"];
-       //data mapped field and object data
-       const Data=FormatJson(Field , JsonData)
-       excel.export_json_to_excel(
-        {
-            header:Header,
-            data:Data,
-            sheetName:"NOTES EMISES",
-            filename:"Note",
-            autoWidth:true,
-            bookType:"xlsx",
-        }
-       )
-    })
-   
-}
-
-
-
-const selectedSite = ref({});
+const selectedSite = ref(null);
 const siteList = ref([]);
 const noteList = ref([]);
 
@@ -81,7 +42,7 @@ onMounted(() => {
     <div class="grid">
         <div class="col-12">
             <div class="card">
-                <h5>Liste des Nouvelles Immatriculations tirées</h5>
+                <h5>LISTE DES VEHICULES ET LEURS PROPRIETAIRES DANS LA BASE DE DONNEES</h5>
                 <div class="card flex justify-center flex-wrap gap-3">
 
                     <Calendar v-model="dateDebut" showIcon dateFormat="dd/mm/yy" />
@@ -116,20 +77,25 @@ onMounted(() => {
             <div class="card">
                 <DataTable :value="noteList" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     tableStyle="min-width: 50rem">
-                    <template #header>
-                        <div style="text-align: left">
-                            <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
-                        </div>
-                    </template>
-                    <Column field="numOp" header="OPERATION" style="width: auto"></Column>
-                    <Column field="site" header="SITE" style="width: auto"></Column>
-                    <Column field="noms" header="NOM OU RAISSON SOCIALE" style="width: auto"></Column>
-                    <Column field="numImpot" header="NIF" style="width: auto"></Column>
-                    <Column field="numChassis" header="CHASSIS" style="width: auto"></Column>
-                    <Column field="numPlaque" header="PLAQUE" style="width: auto"></Column>
-                    <Column field="genre" header="GENRE" style="width: auto"></Column>
+                    <Column field="type" header="TYPE DE PROPRIETAIRE" style="width: auto"></Column>
+                    <Column field="nomSite" header="SITE" style="width: auto"></Column>
+                    <Column field="noms" header="NOMS ET RAISON SOCIALE" style="width: auto"></Column>
+                    <Column field="telephones" header="TELEPHONE" style="width: auto"></Column>
+                    <Column field="numImpotDgi" header="NIF" style="width: auto"></Column>
+                    <Column field="mail" header="MAIL" style="width: auto"></Column>
                     <Column field="marque" header="MARQUE" style="width: auto"></Column>
                     <Column field="modele" header="MODELE" style="width: auto"></Column>
+                    <Column field="nombreCv" header="PUISSANCE FISC" style="width: auto"></Column>
+                    <Column field="genre" header="GENRE" style="width: auto"></Column>
+                    <Column field="usage" header="USAGE" style="width: auto"></Column>
+                    <Column field="province" header="PROVINCE" style="width: auto"></Column>
+                    <Column field="ville" header="VILLE" style="width: auto"></Column>
+                    <Column field="commune" header="COMMUNE" style="width: auto"></Column>
+                    <Column field="quartier" header="QUARTIER" style="width: auto"></Column>
+                    <Column field="avenue" header="AVENUE" style="width: auto"></Column>
+                    <Column field="numero" header="NUMERO" style="width: auto"></Column>
+                    <Column field="primeEmise" header="PRIME EMISE" style="width: auto"></Column>
+                    <Column field="primeEmiseFc" header="PRIME EMISE(Fc)" style="width: auto"></Column>
                 </DataTable>
             </div>
         </div>

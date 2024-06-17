@@ -4,10 +4,10 @@
                 <div class="flex justify-content-between mb-3">
                     <div>
                         <span class="block text-500 font-small mb-3">{{ cardData.title }}</span>
-                        <div class="text-900 font-medium text-xl">{{ cardData.nombre }}</div>
+                        <div class="text-900 font-small text-md">{{ cardData.nombre }}</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i :class="cardData.icon" class="text-blue-500 text-xl"></i>
+                        <i :class="cardData.icon" class="text-blue-500 text-md"></i>
                     </div>
                 </div>
                 <span class="text-green-500 font-medium"></span>

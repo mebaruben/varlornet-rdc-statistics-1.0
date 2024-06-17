@@ -1,5 +1,6 @@
 import api from '../service/api';
 import moment from 'moment';
+import tokenService from './token.service';
 
 class DashBoardService {
     getDateDashboard(nombreJour) {
@@ -174,7 +175,7 @@ class DashBoardService {
 
             console.log(response);
 
-            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? response.data.dgi.total : 0, icon: 'pi pi-dollar' });
+            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService. numberWithCommas(response.data.dgi.total_fc) + "(en FC)"  : 0, icon: 'pi pi-dollar' });
         });
 
         api.get('/dash/plaques/' + dateRech).then((response) => {

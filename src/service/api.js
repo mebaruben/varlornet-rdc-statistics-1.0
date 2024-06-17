@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from '../store';
 
+
 const axiosClient = axios.create({
     baseURL:"https://api.valornet-rdc.com/StatINV/stat/",
     //https://api.valornet-rdc.com/StatINV/stat/test/
@@ -32,8 +33,10 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
+
         console.log("error exception :" , error);
         if (error.response) {
+            
             if (error.response.status === 401) {
                 console.log(error.response.data)
             } else if (error.response.status === 403) {

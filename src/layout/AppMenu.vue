@@ -4,15 +4,15 @@ import { computed, ref } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
 import tokenService from '../service/token.service';
 
-const userConnected=tokenService.getUser();
+const userConnected = tokenService.getUser();
 
 const model_dgi = ref([
     {
         label: 'Dashboard',
         items: [
-            
-        { label: 'DGI', icon: 'pi pi-fw pi-home', to: '/'  } ,
-       
+
+            { label: 'DGI', icon: 'pi pi-fw pi-home', to: '/' },
+
 
         ]
     },
@@ -22,38 +22,38 @@ const model_dgi = ref([
             {
                 label: 'DGI',
                 icon: 'pi pi-fw pi-bookmark',
-                module:1,
-                
+                module: 1,
+
                 items: [
                     {
                         label: 'NOTES EMISES',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                            { label: 'Immatriculation', icon: 'pi pi-fw pi-bookmark' , to:'/dgi/note-immatriculation' },
-                            { label: 'Mutation', icon: 'pi pi-fw pi-bookmark' , to:'/dgi/note-mutation'},
-                            { label: 'Reimmatriculation', icon: 'pi pi-fw pi-bookmark' ,to:'/dgi/note-reimmatriculation' },
-                            { label: 'Duplicata', icon: 'pi pi-fw pi-bookmark' , to:'/dgi/note-duplicata'},
-                            { label: "Chan. Adresse ", icon: 'pi pi-fw pi-bookmark' ,to:'/dgi/note-changement'},
-                            { label: "Immat. Temporaire ", icon: 'pi pi-fw pi-bookmark' ,to:'/dgi/note-temporaire'},
+                            { label: 'Immatriculation', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-immatriculation' },
+                            { label: 'Mutation', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-mutation' },
+                            { label: 'Reimmatriculation', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-reimmatriculation' },
+                            { label: 'Duplicata', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-duplicata' },
+                            { label: "Chan. Adresse ", icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-changement' },
+                            { label: "Immat. Temporaire ", icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-temporaire' },
 
                         ]
                     },
                     {
                         label: 'SITUATION FINANCIERES',
                         icon: 'pi pi-fw pi-bookmark',
-                        items: [{ label: 'Notes', icon: 'pi pi-fw pi-bookmark' , to:'/statistiques/situation-generale-emise' },
-                                { label: 'Apurement', icon: 'pi pi-fw pi-bookmark' ,to:'/statistiques/situation-notes-apure' },
-                                { label: 'Sit. gen. apurement', icon: 'pi pi-fw pi-bookmark' ,to:'/statistiques/situation-generale-apure' },
-                                { label: 'Recettes Realisées ', icon: 'pi pi-fw pi-bookmark' ,to:'/statistiques/tableau-synthese-note' },
-                                
+                        items: [{ label: 'Notes', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/situation-generale-emise' },
+                        { label: 'Apurement', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/situation-notes-apure' },
+                        { label: 'Sit. gen. apurement', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/situation-generale-apure' },
+                        { label: 'Recettes Realisées ', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/tableau-synthese-note' },
+
                         ]
                     },
                     {
                         label: 'SITUATION PLAQUES',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                                { label: 'Plaques attribuées', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Plaques/Sites', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Plaques attribuées', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Plaques/Sites', icon: 'pi pi-fw pi-bookmark' },
                         ]
                     }
                 ]
@@ -66,11 +66,11 @@ const model_admin = ref([
     {
         label: 'Dashboard',
         items: [
-            
-        { label: 'DGI', icon: 'pi pi-fw pi-home', to: '/' , module:1 } ,
-        { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/assurance/dashboard-assurance' ,module:2 } ,
-        { label: 'CARTE ROSE', icon: 'pi pi-fw pi-home', to: '/valornet/dashboard-valornet' , module:3 } ,
-        { label: 'RTNC', icon: 'pi pi-fw pi-home', to: '/rtnc/dashboard-rtnc' , module:4 } ,
+
+            { label: 'DGI', icon: 'pi pi-fw pi-home', to: '/', module: 1 },
+            { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/assurance/dashboard-assurance', module: 2 },
+            { label: 'CARTE ROSE', icon: 'pi pi-fw pi-home', to: '/valornet/dashboard-valornet', module: 3 },
+            { label: 'RTNC', icon: 'pi pi-fw pi-home', to: '/rtnc/dashboard-rtnc', module: 4 },
 
         ]
     },
@@ -80,38 +80,38 @@ const model_admin = ref([
             {
                 label: 'DGI',
                 icon: 'pi pi-fw pi-bookmark',
-                module:1,
-                
+                module: 1,
+
                 items: [
                     {
                         label: 'NOTES EMISES',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                            { label: 'Immatriculation', icon: 'pi pi-fw pi-bookmark' , to:'/dgi/note-immatriculation' },
-                            { label: 'Mutation', icon: 'pi pi-fw pi-bookmark' , to:'/dgi/note-mutation'},
-                            { label: 'Reimmatriculation', icon: 'pi pi-fw pi-bookmark' ,to:'/dgi/note-reimmatriculation' },
-                            { label: 'Duplicata', icon: 'pi pi-fw pi-bookmark' , to:'/dgi/note-duplicata'},
-                            { label: "Chan. Adresse ", icon: 'pi pi-fw pi-bookmark' ,to:'/dgi/note-changement'},
-                            { label: "Immat. Temporaire ", icon: 'pi pi-fw pi-bookmark' ,to:'/dgi/note-temporaire'},
+                            { label: 'Immatriculation', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-immatriculation' },
+                            { label: 'Mutation', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-mutation' },
+                            { label: 'Reimmatriculation', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-reimmatriculation' },
+                            { label: 'Duplicata', icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-duplicata' },
+                            { label: "Chan. Adresse ", icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-changement' },
+                            { label: "Immat. Temporaire ", icon: 'pi pi-fw pi-bookmark', to: '/dgi/note-temporaire' },
 
                         ]
                     },
                     {
                         label: 'SITUATION FINANCIERES',
                         icon: 'pi pi-fw pi-bookmark',
-                        items: [{ label: 'Notes', icon: 'pi pi-fw pi-bookmark' , to:'/statistiques/situation-generale-emise' },
-                                { label: 'Apurement', icon: 'pi pi-fw pi-bookmark' ,to:'/statistiques/situation-notes-apure' },
-                                { label: 'Sit. gen. apurement', icon: 'pi pi-fw pi-bookmark' ,to:'/statistiques/situation-generale-apure' },
-                                { label: 'Recettes Realisées ', icon: 'pi pi-fw pi-bookmark' ,to:'/statistiques/tableau-synthese-note' },
-                                
+                        items: [{ label: 'Notes', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/situation-generale-emise' },
+                        { label: 'Apurement', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/situation-notes-apure' },
+                        { label: 'Sit. gen. apurement', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/situation-generale-apure' },
+                        { label: 'Recettes Realisées ', icon: 'pi pi-fw pi-bookmark', to: '/statistiques/tableau-synthese-note' },
+
                         ]
                     },
                     {
                         label: 'SITUATION PLAQUES',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                                { label: 'Plaques attribuées', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Plaques/Sites', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Plaques attribuées', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Plaques/Sites', icon: 'pi pi-fw pi-bookmark' },
                         ]
                     }
                 ]
@@ -119,7 +119,7 @@ const model_admin = ref([
             {
                 label: 'ASSURANCE',
                 icon: 'pi pi-fw pi-bookmark',
-                module:2,
+                module: 2,
                 items: [
                     {
                         label: 'Individuelle',
@@ -143,7 +143,7 @@ const model_admin = ref([
             {
                 label: 'VALORNET',
                 icon: 'pi pi-fw pi-bookmark',
-                module:3,
+                module: 3,
                 items: [
                     {
                         label: 'COM. DGI',
@@ -163,12 +163,12 @@ const model_admin = ref([
             {
                 label: 'RTNC',
                 icon: 'pi pi-fw pi-bookmark',
-                module:4,
+                module: 4,
                 items: [
-                    
-                        { label: 'Notes Initiées', icon: 'pi pi-fw pi-bookmark' },
-                        { label: 'Notes Payées', icon: 'pi pi-fw pi-bookmark' }
-                    
+
+                    { label: 'Notes Initiées', icon: 'pi pi-fw pi-bookmark' },
+                    { label: 'Notes Payées', icon: 'pi pi-fw pi-bookmark' }
+
                 ]
             }
         ]
@@ -178,8 +178,8 @@ const model_admin = ref([
 const model_sonas = ref([
     {
         label: 'Dashboard',
-        items: [   
-        { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/dashboard-assurance' ,module:2 } ,
+        items: [
+            { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/dashboard-assurance', module: 2 },
         ]
     },
     {
@@ -188,18 +188,18 @@ const model_sonas = ref([
             {
                 label: 'ASSURANCE',
                 icon: 'pi pi-fw pi-bookmark',
-                module:2,
+                module: 2,
                 items: [
                     {
                         label: 'Individuelle',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                            { label: 'Affaires Initiées', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Affaires Realisées', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Polices en Cours', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Polices échues', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Financières Réalisées', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Liste des Proprietaires', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Affaires Initiées', icon: 'pi pi-fw pi-bookmark', to: '/assurance/registre-financiere-initiee' },
+                            { label: 'Affaires Realisées', icon: 'pi pi-fw pi-bookmark', to: '/assurance/registre-financiere-realisee' },
+                            { label: 'Polices en Cours', icon: 'pi pi-fw pi-bookmark', to: '/assurance/police-en-cours' },
+                            { label: 'Polices échues', icon: 'pi pi-fw pi-bookmark', to: '/assurance/police-dechue' },
+                            { label: 'Financières Réalisées', icon: 'pi pi-fw pi-bookmark', to: '/assurance/affaire-financiere-realisee' },
+                            { label: 'Liste des Proprietaires', icon: 'pi pi-fw pi-bookmark', to: '/assurance/liste-proprietaires' },
                         ]
                     },
                     {
@@ -213,8 +213,8 @@ const model_sonas = ref([
     }
 ]);
 
-const list = (userConnected.data.module == '3') ? model_sonas : 
-             (userConnected.data.module == '2') ? model_dgi : model_admin;
+const list = (userConnected.data.module == '3') ? model_sonas :
+    (userConnected.data.module == '2') ? model_dgi : model_admin;
 
 
 </script>
@@ -225,7 +225,7 @@ const list = (userConnected.data.module == '3') ? model_sonas :
             <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
-       
+
     </ul>
 </template>
 

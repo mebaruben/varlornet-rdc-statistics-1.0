@@ -65,6 +65,37 @@ const router = createRouter({
                     name: 'note-temporaire',
                     component: () => import('@/views/dgi/NoteEmiseTemp.vue')
                 },
+                {
+                    path: '/assurance/affaire-financiere-realisee',
+                    name: 'affaire-financiere-realisee',
+                    component: () => import('@/views/assurance/AffaireFinancieresRealisees.vue')
+                },
+                {
+                    path: '/assurance/registre-financiere-initiee',
+                    name: 'registre-financiere-initiee',
+                    component: () => import('@/views/assurance/RegistreAffaireInitiees.vue')
+                },
+                {
+                    path: '/assurance/registre-financiere-realisee',
+                    name: 'registre-financiere-realisee',
+                    component: () => import('@/views/assurance/RegistreAffairesRealisees.vue')
+                },
+                {
+                    path: '/assurance/liste-proprietaires',
+                    name: 'liste-proprietaires',
+                    component: () => import('@/views/assurance/ListeProprietaires.vue')
+                },
+                {
+                    path: '/assurance/police-en-cours',
+                    name: 'police-en-cours',
+                    component: () => import('@/views/assurance/ListePoliceEnCoursValidite.vue')
+                },
+                {
+                    path: '/assurance/police-dechue',
+                    name: 'police-dechue',
+                    component: () => import('@/views/assurance/ListePoliceDechueValidite.vue')
+                }
+                ,
 
                 {
                     path: '/statistiques/situation-generale-emise',

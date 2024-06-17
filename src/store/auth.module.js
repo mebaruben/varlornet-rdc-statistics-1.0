@@ -100,6 +100,7 @@ export default {
 
         logout({commit}){
             tokenService.removeToken;
+            tokenService.removeUser;
             commit('logout');
             router.push({ name: 'Login' })
         }

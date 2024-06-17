@@ -5,8 +5,16 @@ import AppConfig from '@/layout/AppConfig.vue';
 import { useRouter } from 'vue-router';
 import store from '../store';
 import { mapState } from "vuex";
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
 
 const { layoutConfig } = useLayout();
+
+const toast = useToast();
+
+const showWarn = () => {
+    toast.add({ severity: 'warn', summary: 'Warn Message', detail: 'Bonjour hello word', life: 3000 });
+};
 
 const email = ref('');
 const password = ref('');
@@ -51,9 +59,25 @@ function getUserConnected(email) {
        }
         
 
-    }).catch(err => {
+    } ,
+    (error)=>{
+        console.log("login error exception :" , error);
+        if (error.response) {
+            
+            if (error.response.status === 401) {
+                console.log(error.response.data)
+            } else if (error.response.status === 403) {
+                console.log(error.response.data)
+            } else if (error.response.status === 500) {
+                console.log(error.response.data)
+            }
+        }
+    }
+
+).catch(err => {
+
         loading.value=false;
-        console.log(err)
+        console.log()
         console.log(err.message);
         errorMsg.value = err.message;
         email.value="";
@@ -77,9 +101,8 @@ function auth() {
 
     }).catch(err => {
         loading.value=false;
-        console.log(err)
-        console.log(err.message);
-        errorMsg.value = err.message;
+        console.log(err.response.data)
+        showWarn;
     })
 }
 
@@ -89,12 +112,16 @@ const logoUrl = computed(() => {
 </script>
 
 <template>
+      
     <div
         class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+        
+        
         <div class="flex flex-column align-items-center justify-content-center">
-
+            
             <div
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+
                 <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius: 53px">
                     <div class="text-center mb-5">
                         <img src="/demo/images/login/inv.png" alt="Image" height="50" class="mb-3" />
@@ -102,7 +129,6 @@ const logoUrl = computed(() => {
                         <span class="text-600 font-medium">Veuillez vous connecter avec votre login et le mot de
                             passe</span>
                     </div>
-
                     <form @submit.prevent="auth">
                         <div>
                             <label for="email" class="block text-900 text-xl font-medium mb-2">Login</label>
@@ -117,7 +143,10 @@ const logoUrl = computed(() => {
                             <div class="flex align-items-center justify-content-between mb-5 gap-5">
 
                             </div>
+
+                            <Toast />
                             <Button label="Connexion" class="w-full p-3 text-xl"  :loading="loading" type="submit"></Button>
+                        
                         </div>
                     </form>
                 </div>
