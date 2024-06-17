@@ -71,32 +71,27 @@ const router = createRouter({
             path: '/login',
             name: 'Login',
             component: () => import('@/views/Login.vue'),
-            meta: {
-                requiresAuth: true // Add meta field to indicate protected route
-              }
+           
         }
     ]
 });
 
 // GOOD
-  router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth) {
-      const token = tokenService.getLocalAccessToken();
+  router.beforeEach((to) => {
+
+    const publicPages=['/login'];
+    const authRequired=! publicPages.includes(to.path);
+    const token = tokenService.getLocalAccessToken();
+    const user=tokenService.getUser();
+
       console.log('token router : '+JSON.stringify(token).toString());
-      if (token!=null) {
-        // User is authenticated, proceed to the route
-        console.log('naza na kati ya router');
-       // store.dispatch("auth/getToken");
-        next();
-      } else {
-        // User is not authenticated, redirect to login
-        next('/login');
-      }
-    } else {
-      // Non-protected route, allow access
-      next();
-    }
+      if (authRequired && !user) {
+       return '/login';
+      } 
+    
   });
+
+  
   
 
 export default router;

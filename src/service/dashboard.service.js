@@ -71,6 +71,7 @@ class DashBoardService {
     }
 
     getDateDashboardList(response) {
+        console.log(response);
         let list = [];
         let imm = {
             id: 1,
