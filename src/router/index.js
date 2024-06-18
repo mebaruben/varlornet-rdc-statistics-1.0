@@ -15,9 +15,13 @@ const router = createRouter({
                     path: '/',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue'),
-                    meta: {
-                        requiresAuth: true // Add meta field to indicate protected route
-                      }
+                  
+                },
+                {
+                    path: '/dashboard-arca',
+                    name: 'dashboard-arca',
+                    component: () => import('@/views/Dashboard-arca.vue'),
+                  
                 },
                 {
                     path: '/dashboard-assurance',
@@ -33,8 +37,7 @@ const router = createRouter({
                     path: '/valornet/dashboard-valornet',
                     name: 'dashboard-valornet',
                     component: () => import('@/views/valornet/Dashboard-valornet.vue')
-                }
-                ,
+                },
                 {
                     path: '/dgi/note-immatriculation',
                     name: 'note-immatriculation',
@@ -94,9 +97,7 @@ const router = createRouter({
                     path: '/assurance/police-dechue',
                     name: 'police-dechue',
                     component: () => import('@/views/assurance/ListePoliceDechueValidite.vue')
-                }
-                ,
-
+                },
                 {
                     path: '/statistiques/situation-generale-emise',
                     name: 'situation-generale-emise',
@@ -116,7 +117,7 @@ const router = createRouter({
                     path: '/statistiques/tableau-synthese-note',
                     name: 'tableau-synthese-note',
                     component: () => import('@/views/statistiques/TableauSyntheseNotesParOperation.vue')
-                },
+                }
             ]
         },
         {
@@ -141,28 +142,23 @@ const router = createRouter({
             component: () => import('@/views/Login.vue'),
             meta: {
                 requiresAuth: true // Add meta field to indicate protected route
-              }
+            }
         }
     ]
 });
 
-
-  router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth) {
-      const token = tokenService.getLocalAccessToken();
-      console.log('token router : '+JSON.stringify(token).toString());
-      if (token!=null) {  
-       // store.dispatch("auth/getToken");  
+router.beforeEach((to, from, next) => {
+    const token = tokenService.getLocalAccessToken();
+    const user = tokenService.getUser();
+    console.log('token router : ' + JSON.stringify(token).toString());
+    if (token != null) {
+        // store.dispatch("auth/getToken");
+        console.log('user connected : ', user.data);
         next();
-      } else {
+    } else {
         // User is not authenticated, redirect to login
         next('/login');
-      }
-    } else {
-      // Non-protected route, allow access
-      next('/login');
     }
-  });
-  
+});
 
 export default router;

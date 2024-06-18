@@ -81,7 +81,8 @@ onMounted(() => {
     //
     //console.log("data computed: " + store.state.dashboard.chartPiedList);
     dashboardSonasService.getPrivilegesSites().then((response) => {
-        siteList.value = response.data;
+
+        siteList.value = response.data.filter((item) => item.id.length <= 2);
     });
 
 

@@ -36,7 +36,8 @@ const setChart = () => {
     
    // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
-        labels: datalist.value.dataOp.map(row =>row.libelle+"("+row.valeur+")"),
+        labels: datalist.value.dataOp.map(row =>row.libelle.charAt(0).toUpperCase()
+        + row.libelle.slice(1)+"("+row.valeur+")"),
         datasets: [
             {
                 data: datalist.value.dataOp.map(row =>row.valeur),
@@ -74,7 +75,7 @@ watch(
 <template>
         <div class="col-12 lg:col-6 xl:col-4">
             <div class="card flex flex-column align-items-center">
-                <h5 class="text-left w-full">NOUVELLE AFFAIRE</h5>
+                <h5 class="text-left w-full">FLOTTE</h5>
                 <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>   

@@ -6,11 +6,16 @@ import { useRouter } from 'vue-router';
 import store from '../store';
 import { mapState } from "vuex";
 import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm";
 import Toast from 'primevue/toast';
 
 const { layoutConfig } = useLayout();
 
 const toast = useToast();
+const confirm = useConfirm();
+
+
+
 
 const showWarn = () => {
     toast.add({ severity: 'warn', summary: 'Warn Message', detail: 'Bonjour hello word', life: 3000 });
@@ -38,50 +43,71 @@ let user = {
 
 }
 
+const confirm1 = (message) => {
+    console.log("Bonjour je suis ici")
+    confirm.require({
+        message: message,
+        header: 'Attention',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Annuler',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Valider'
+        },
+        accept: () => {
+           // toast.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+        },
+        reject: () => {
+           // toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        }
+    });
+};
+
 computed(() => {
     mapState(["auth"]);
 });
 
 function getUserConnected(email) {
-    
-    store.dispatch("auth/getUserConnected", email).then((response) => {
-        
-       console.log('data user get User connected ' , response.data);
-       loading.value=false;
-       if(response.data.module=='2'){
-        router.push({ path: '/' })
-       } else if(response.data.module=='3'){
-        router.push({ path: '/dashboard-assurance' })
-       }else if(response.data.module=='7'){
-        router.push({ path: '/dashboard-rtnc' })
-       }else{
-        router.push({ path: '/login' })
-       }
-        
 
-    } ,
-    (error)=>{
-        console.log("login error exception :" , error);
-        if (error.response) {
-            
-            if (error.response.status === 401) {
-                console.log(error.response.data)
-            } else if (error.response.status === 403) {
-                console.log(error.response.data)
-            } else if (error.response.status === 500) {
-                console.log(error.response.data)
+    store.dispatch("auth/getUserConnected", email).then((response) => {
+
+        console.log('data user get User connected ', response.data);
+        loading.value = false;
+        if (response.data.module == '2') {
+            router.push({ path: '/' })
+        } else if (response.data.module == '3') {
+            router.push({ path: '/dashboard-assurance' })
+        } else if (response.data.module == '7') {
+            router.push({ path: '/dashboard-rtnc' })
+        } else {
+            router.push({ path: '/' })
+        }
+    },
+        (error) => {
+            console.log("login error exception :", error);
+            if (error.response) {
+
+                if (error.response.status === 401) {
+                    console.log(error.response.data)
+                } else if (error.response.status === 403) {
+                    console.log(error.response.data)
+                } else if (error.response.status === 500) {
+                    console.log(error.response.data)
+                }
             }
         }
-    }
 
-).catch(err => {
+    ).catch(err => {
 
-        loading.value=false;
+        loading.value = false;
         console.log()
         console.log(err.message);
         errorMsg.value = err.message;
-        email.value="";
-        password.value="";
+        email.value = "";
+        password.value = "";
     })
 
 }
@@ -93,16 +119,16 @@ function auth() {
 
     user = { login: email.value, password: password.value, adresseMac, nomMachine }
 
-    loading.value=true;
+    loading.value = true;
 
     store.dispatch("auth/login", user).then(() => {
 
         getUserConnected(email);
 
     }).catch(err => {
-        loading.value=false;
+        loading.value = false;
         console.log(err.response.data)
-        showWarn;
+        confirm1(err.response.data)
     })
 }
 
@@ -112,13 +138,16 @@ const logoUrl = computed(() => {
 </script>
 
 <template>
-      
+
+    <Toast />
+    <ConfirmDialog></ConfirmDialog>
+
     <div
         class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
-        
-        
+
+
         <div class="flex flex-column align-items-center justify-content-center">
-            
+
             <div
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
 
@@ -145,8 +174,9 @@ const logoUrl = computed(() => {
                             </div>
 
                             <Toast />
-                            <Button label="Connexion" class="w-full p-3 text-xl"  :loading="loading" type="submit"></Button>
-                        
+                            <Button label="Connexion" class="w-full p-3 text-xl" :loading="loading"
+                                type="submit"></Button>
+
                         </div>
                     </form>
                 </div>

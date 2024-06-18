@@ -33,7 +33,8 @@ const setChart = () => {
     
    // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
-        labels: datalist.value.dataOp.map(row =>row.libelle+"("+row.valeur+")"),
+        labels: datalist.value.dataOp.map(row =>row.libelle.charAt(0).toUpperCase()
+        + row.libelle.slice(1)+"("+row.valeur+")"),
         datasets: [
             {
                 data: datalist.value.dataOp.map(row =>row.valeur),

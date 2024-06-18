@@ -68,9 +68,10 @@ const model_admin = ref([
         items: [
 
             { label: 'DGI', icon: 'pi pi-fw pi-home', to: '/', module: 1 },
-            { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/assurance/dashboard-assurance', module: 2 },
+            { label: 'ASSURANCE', icon: 'pi pi-fw pi-home', to: '/dashboard-assurance', module: 2 },
             { label: 'CARTE ROSE', icon: 'pi pi-fw pi-home', to: '/valornet/dashboard-valornet', module: 3 },
-            { label: 'RTNC', icon: 'pi pi-fw pi-home', to: '/rtnc/dashboard-rtnc', module: 4 },
+            { label: 'RTNC', icon: 'pi pi-fw pi-home', to: '/dashboard-rtnc', module: 4 },
+            { label: 'ARCA', icon: 'pi pi-fw pi-home', to: '/dashboard-arca', module: 4 },
 
         ]
     },
@@ -125,12 +126,12 @@ const model_admin = ref([
                         label: 'Individuelle',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                            { label: 'Affaires Initiées', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Affaires Realisées', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Polices en Cours', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Polices échues', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Financières Réalisées', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Liste des Proprietaires', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Affaires Initiées', icon: 'pi pi-fw pi-bookmark', to: '/assurance/registre-financiere-initiee' },
+                            { label: 'Affaires Realisées', icon: 'pi pi-fw pi-bookmark', to: '/assurance/registre-financiere-realisee' },
+                            { label: 'Polices en Cours', icon: 'pi pi-fw pi-bookmark', to: '/assurance/police-en-cours' },
+                            { label: 'Polices échues', icon: 'pi pi-fw pi-bookmark', to: '/assurance/police-dechue' },
+                            { label: 'Financières Réalisées', icon: 'pi pi-fw pi-bookmark', to: '/assurance/affaire-financiere-realisee' },
+                            { label: 'Liste des Proprietaires', icon: 'pi pi-fw pi-bookmark', to: '/assurance/liste-proprietaires' },
                         ]
                     },
                     {
@@ -141,23 +142,35 @@ const model_admin = ref([
                 ]
             },
             {
-                label: 'VALORNET',
+                label: 'VALORNET-RDC',
                 icon: 'pi pi-fw pi-bookmark',
                 module: 3,
                 items: [
                     {
-                        label: 'COM. DGI',
+                        label: 'Nos Commissions',
                         icon: 'pi pi-fw pi-bookmark',
                         items: [
-                            { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                            { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' }
+                            { label: 'dgi', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'assurance', icon: 'pi pi-fw pi-bookmark' }
                         ]
                     },
                     {
-                        label: 'COM. ASSURANCE',
+                        label: 'Production des Plaques',
                         icon: 'pi pi-fw pi-bookmark',
-                        items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }]
+                        items: [
+                            { label: 'Reception des plaques', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Livraison des Plaques', icon: 'pi pi-fw pi-bookmark' }
+                        ]
+                    },
+                    {
+                        label: "Production des Cartes Roses",
+                        icon: 'pi pi-fw pi-bookmark',
+                        items: [
+                            { label: 'Reception des carte', icon: 'pi pi-fw pi-bookmark' },
+                            { label: 'Livraison des carte', icon: 'pi pi-fw pi-bookmark' }
+                        ]
                     }
+
                 ]
             },
             {
@@ -168,6 +181,17 @@ const model_admin = ref([
 
                     { label: 'Notes Initiées', icon: 'pi pi-fw pi-bookmark' },
                     { label: 'Notes Payées', icon: 'pi pi-fw pi-bookmark' }
+
+                ]
+            },
+            {
+                label: 'ARCA',
+                icon: 'pi pi-fw pi-bookmark',
+                module: 4,
+                items: [
+
+                    { label: 'Dossiers Assurés', icon: 'pi pi-fw pi-bookmark' },
+                    
 
                 ]
             }
