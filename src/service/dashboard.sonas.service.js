@@ -133,7 +133,7 @@ class DashBoardServiceSonas {
         api.get('/finances/dash/' + dateRech).then((response) => {
             console.log(response);
 
-            list.push({ id: 4, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('sonas') ? tokenService. numberWithCommas(response.data.sonas.total_fc) + "(en FC)" : 0, icon: 'pi pi-dollar' });
+            list.push({ id: 4, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('sonas') ? tokenService. numberWithCommas(response.data.sonas.total_fc) + "(en FC)" : 0, icon: 'pi pi-money-bill' });
         });
 
         api.get('/dash/notes/' + dateRech).then((response) => {

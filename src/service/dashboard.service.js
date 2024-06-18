@@ -175,7 +175,7 @@ class DashBoardService {
 
             console.log(response);
 
-            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService. numberWithCommas(response.data.dgi.total_fc) + "(en FC)"  : 0, icon: 'pi pi-dollar' });
+            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService. numberWithCommas(response.data.dgi.total_fc) + "(en FC)"  : 0, icon: 'pi pi-money-bill' });
         });
 
         api.get('/dash/plaques/' + dateRech).then((response) => {
@@ -183,7 +183,7 @@ class DashBoardService {
             list.push({ id: 1, title: 'PLAQUES DISPONIBLES', nombre: response.data.dispo, icon: 'pi pi-car' });
             list.push({ id: 2, title: 'PLAQUES RESERVEES', nombre: response.data.reserve_non_attribue, icon: 'pi pi-car' });
             list.push({ id: 3, title: 'PLAQUES ATTRIBUEES', nombre: response.data.attribue, icon: 'pi pi-car' });
-            list.push({ id: 4, title: 'NIM ET REI APUREES', nombre: response.data.attribue, icon: 'pi pi-dollar' });
+            list.push({ id: 4, title: 'NIM ET REI APUREES', nombre: response.data.attribue, icon: 'pi pi-car' });
             console.log(list);
         });
 
