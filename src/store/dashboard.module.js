@@ -86,13 +86,14 @@ export default {
 
         appelServiceOperation({ commit }, dateRech) {
             let list=[];
-            commit('removeChartPiedList');
+            
             return dashboardService.appelServiceOperation(dateRech).then(response => {
                 dashboardService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
                 })
                 console.log(list.length);
+                commit('removeChartPiedList');
                 commit('setChartPiedList', list);
             });
             
@@ -101,7 +102,7 @@ export default {
         appelServiceOperationParDateRechEtParSite({ commit }, payloadUser) {
             console.log("data store : " ,payloadUser.dateRech , payloadUser.site )
             let list=[];
-            commit('removeChartPiedList');
+            
             return dashboardService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech ,payloadUser.site).then(response => {
                 console.log("data store : " ,response )
                 dashboardService.getDateDashboardList(response).forEach((item) => {
@@ -109,6 +110,7 @@ export default {
                     list.push(item);
                 })
                 console.log(list.length);
+                commit('removeChartPiedList');
                 commit('setChartPiedList', list);
             });
             

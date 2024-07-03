@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch , onBeforeUnmount } from 'vue';
+import { computed, onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import CardView from './CardView.vue';
 import ChartView from '../components/ChartView.vue';
@@ -13,6 +13,18 @@ import ChartViewAdresse from '../components/ChartViewAdresse.vue';
 import ChartViewTemp from '../components/ChartViewTemp.vue';
 import CardLoader from '../components/CardLoader.vue';
 import moment from 'moment/moment';
+
+import { useIntervalFn } from '@vueuse/core'
+import { rand } from '@vueuse/shared'
+
+const greetings = ['Hello', 'Hi', 'Yo!', 'Hey', 'Hola', 'こんにちは', 'Bonjour', 'Salut!', '你好', 'Привет']
+const word = ref('Hello')
+const interval = ref(300000)
+
+const { pause, resume, isActive } = useIntervalFn(() => { 
+    getDashboardData()
+
+}, interval)
 
 
 let cardDataList = [];
@@ -35,7 +47,7 @@ console.log(userConnected.data)
 
 const { isDarkTheme } = useLayout();
 
-const checked = ref(false); 
+const checked = ref(false);
 
 const loading = ref(false);
 
@@ -52,26 +64,26 @@ const siteList = ref([]);
 const load = () => {
     loading.value = true;
     setTimeout(() => {
+        console.log("dashboard");
         loading.value = false;
     }, 5000);
 }
 
 onBeforeUnmount(() => {
-    
-  });
+
+});
 
 computed(() => {
 
     mapState(["auth"]);
     mapState(["dashboard"]);
 
+    setInterval(load, 5000);
+
 });
 
 
 onMounted(() => {
-
-    setInterval(load , 5000);
-
     // dashboardService.appelServicePlaques(dateRech);
     // dashboardService.appelServiceFinanceSite(dateRech);
     cardDataList = dashboardService.getCardDataDash(dashboardService.getDateFormat(dateRech));
@@ -86,16 +98,39 @@ onMounted(() => {
     dashboardService.getPrivilegesSites().then((response) => {
         siteList.value = response.data.filter((item) => item.id.length >= 4);;
     });
-
-
 });
 
 //IMMATRICULATION  //
+function getDashboardData() {
+
+    word.value = greetings[rand(0, greetings.length - 1)]
+
+    console.log("Methode getDashboardData")
+    cardDataList = [];
+    let payloadUser;
+    let idsite;
+    let dateSelected;
+
+    if (selectedDay.value == null || selectedDay.value.name == 'Live') {
+        dateSelected=0;
+    } else {
+        dateSelected=selectedDay.value.nbre; 
+    }
+
+    if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
+        idsite = 0;
+    } else {
+       idsite=selectedSite.value.id
+    }
+    payloadUser = { site: idsite, dateRech: moment().subtract(dateSelected, 'days').format('yyyy-MM-DD') }
+    cardDataList = dashboardService.getCardDataDashParSite(idsite, dashboardService.getDateFormat(dateRech));
+    store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
+
+}
 
 
 function getOnValueChangedDropdownSite(v) {
     cardDataList = [];
-
     let payloadUser;
 
     if (selectedDay.value == null || selectedDay.value.name == 'Live') {
@@ -104,16 +139,17 @@ function getOnValueChangedDropdownSite(v) {
 
         console.log("valeur jour :", moment().subtract(0, 'days').format('yyyy-MM-DD'), v.id);
         cardDataList = dashboardService.getCardDataDashParSite(v.id, moment().subtract(0, 'days').format('yyyy-MM-DD'));
-        
-        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite",  payloadUser);
+
+        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
     } else {
 
-        payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
+        payloadUser = { site: v.id, dateRech: moment().subtract(selectedDay.value.nbre, 'days').format('yyyy-MM-DD') }
+
         console.log("valeur jour :", moment().subtract(selectedDay.value.nbre, 'days').format('yyyy-MM-DD'), v.id);
 
         cardDataList = dashboardService.getCardDataDashParSite(v.id, dashboardService.getDateFormat(dateRech));
-        
-        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite",  payloadUser);
+
+        store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
     }
 
 }
@@ -124,23 +160,23 @@ function getOnValueChangedDropdownDateRebours(v) {
     let payloadUser;
 
     if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
-       
+
         const idsite = 0;
         payloadUser = { site: idsite, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
 
         console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), idsite);
 
         cardDataList = dashboardService.getCardDataDashParSite(idsite, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
-       
-       // store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
-       store.dispatch("dashboard/appelServiceOperation", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+
+        // store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
+        store.dispatch("dashboard/appelServiceOperation", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
     } else {
         payloadUser = { site: selectedSite.value.id, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
 
         console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), selectedSite.value);
 
         cardDataList = dashboardService.getCardDataDashParSite(selectedSite.value.id, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
-       
+
         store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
     }
 
@@ -272,7 +308,8 @@ watch(
                     </Dropdown>
                 </div>
                 <div class="flex align-items-center">
-                    <Button text  icon="pi pi-search" :loading="loading"  ></Button>
+                    <p>{{ word }}</p>
+                    <Button text icon="pi pi-search" :loading="loading"></Button>
                 </div>
             </div>
 
@@ -282,7 +319,8 @@ watch(
             v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
         </CardView>
 
-        <div v-if="store.state.dashboard.chartPiedList.length != 0 && cardDataList.length != 0" class="grid grid-cols-3">
+        <div v-if="store.state.dashboard.chartPiedList.length != 0 && cardDataList.length != 0"
+            class="grid grid-cols-3">
             <ChartView></ChartView>
             <ChartViewMut></ChartViewMut>
             <ChartViewCon></ChartViewCon>

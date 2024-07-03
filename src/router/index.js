@@ -9,7 +9,7 @@ const router = createRouter({
         {
             path: '/',
             component: AppLayout,
-            meta: { requiresAuth: true },
+
             children: [
                 {
                     path: '/',
@@ -151,14 +151,12 @@ router.beforeEach((to, from, next) => {
     const token = tokenService.getLocalAccessToken();
     const user = tokenService.getUser();
     console.log('token router : ' + JSON.stringify(token).toString());
-    if (token != null) {
-        // store.dispatch("auth/getToken");
-        console.log('user connected : ', user.data);
-        next();
-    } else {
-        // User is not authenticated, redirect to login
-        next('/login');
-    }
+    
+    if (to.name !=="Login"  && !token) {
+        next({name:"Login"});
+    } else{
+        next()
+    }   
 });
 
 export default router;

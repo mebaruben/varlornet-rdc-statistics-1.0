@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue';
 import dashboardService from '../../service/dashboard.service';
 import statistiqueDgiService from '../../service/statistique.dgi.service';
+import xlsx from 'xlsx/dist/xlsx.full.min'
+import moment from 'moment/moment';
 
 const dateDebut = ref(null);
 const dateFin = ref(null);
@@ -64,6 +66,22 @@ const exportCSV = () => {
    
 }
 
+const exportXLSX = () => {
+    let periode;
+   if( selectedSite.value !=null ) {
+    periode= "NOTES NIM  "+selectedSite.value.nom+" - DU "+dashboardService.getDateFormat(dateDebut.value) +" AU "+dashboardService.getDateFormat(dateDebut.value) +" - "+moment( new Date().getTime()).format("hh:mm:ss");
+   }else{
+    periode= "NOTES NIM TOUS SITES"+moment( new Date().getTime()).format("DD-MM-YYYY hh:mm:ss");
+   }
+
+  const XLSX=xlsx;
+  const workbook=XLSX.utils.book_new();
+  const workSheet=XLSX.utils.json_to_sheet(noteList.value);
+  XLSX.utils.book_append_sheet(workbook,workSheet,"notes emises NIM");
+  XLSX.writeFile(workbook,periode +".xlsx");
+
+}
+
 
 
 const selectedSite = ref({});
@@ -118,7 +136,7 @@ onMounted(() => {
                     tableStyle="min-width: 50rem">
                     <template #header>
                         <div style="text-align: left">
-                            <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+                            <Button icon="pi pi-external-link" label="Export" @click="exportXLSX(event)" />
                         </div>
                     </template>
                     <Column field="numOp" header="OPERATION" style="width: auto"></Column>

@@ -1,6 +1,7 @@
 import AuthService from '../service/auth.service';
 import tokenService from '../service/token.service';
 import router from '../router';
+import dashboardService from '../service/dashboard.service';
 
 
 export default {
@@ -10,7 +11,7 @@ export default {
             loggedIn: false,
             token: tokenService.getLocalAccessToken() 
         },
-        user: {},
+        user: null,
         sites: [],
         messageError:null
     },
@@ -26,7 +27,9 @@ export default {
         },
 
         setUser: (state, userData) => {
-            state.user = Object.assign({},userData);
+            state.user = userData;
+            // Object.assign({},userData)
+            console.log("mutation user " , state.user);
         },
 
         setUserMesssageError:(state , message)=>{
@@ -34,6 +37,7 @@ export default {
         },
 
         setSites: (state, siteData) => {
+            console.log("site store state ",siteData)
             state.sites = siteData;
         },
 
@@ -88,9 +92,10 @@ export default {
             );
         },
         sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then(({ response }) => {
+            return dashboardService.getPrivilegesSites().then((response) => {
+                console.log("auth store site" , response.data);
                 commit('setSites', response.data);
-                return response.data;
+                return response;
             });
         },
 

@@ -34,11 +34,22 @@ const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const router = useRouter();
 
-const userConnected=tokenService.getUser();
+const userConnected= computed(()=>{
+    console.log("user toolbar ", store.state.auth.user);
+    return store.state.auth.user != null ? JSON.parse(store.state.auth.user): null;
+})
+
+const site=computed(()=>{
+    console.log("sites toolbar " ,store.state.auth.sites.length  )
+    console.log(store.state.auth.sites )
+    return store.state.auth.sites !=null ?  store.state.auth.sites.find((item)=>item.site=='1508') : {"id":"0","nom":"INCONNUE"} ; 
+})
 
 
 onMounted(() => {
     bindOutsideClickListener();
+    store.dispatch("auth/getUserConnected");
+    store.dispatch("auth/sitesByprofile");
 });
 
 onBeforeUnmount(() => {
@@ -46,6 +57,8 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
+    mapState(["auth"]);
+    mapState(["dashboard"]);
     return `/layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
 });
 
@@ -123,7 +136,7 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <span class="text-md py-3 px-3">{{ userConnected.data.nom }} -{{ userConnected.data.postnom}}-{{ userConnected.data.prenom }}</span>
+            <span class="text-md py-3 px-3" v-if="userConnected !=null">{{ userConnected.nom }} -{{ userConnected.postnom}}-{{ userConnected.prenom }} ({{ site !=null ? site.nom:"INCONNUE" }})</span>
             <Button type="button" label="Deconnexion" icon="pi pi-close" :loading="loading"
                 @click="openConfirmation()">
             </Button>
