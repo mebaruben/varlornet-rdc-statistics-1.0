@@ -10,8 +10,7 @@ export default {
         chartPiedList: []
     },
 
-    getters: {
-    },
+    getters: {},
 
     mutations: {
         setDashOperation: (state, dashOperationData) => {
@@ -85,35 +84,40 @@ export default {
         },
 
         appelServiceOperation({ commit }, dateRech) {
-            let list=[];
-            
-            return dashboardService.appelServiceOperation(dateRech).then(response => {
+            let list = [];
+
+            return dashboardService.appelServiceOperation(dateRech).then((response) => {
                 dashboardService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
-                })
+                });
                 console.log(list.length);
                 commit('removeChartPiedList');
                 commit('setChartPiedList', list);
             });
-            
         },
 
         appelServiceOperationParDateRechEtParSite({ commit }, payloadUser) {
-            console.log("data store : " ,payloadUser.dateRech , payloadUser.site )
-            let list=[];
-            
-            return dashboardService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech ,payloadUser.site).then(response => {
-                console.log("data store : " ,response )
-                dashboardService.getDateDashboardList(response).forEach((item) => {
-                    console.log(item);
-                    list.push(item);
-                })
-                console.log(list.length);
-                commit('removeChartPiedList');
-                commit('setChartPiedList', list);
-            });
-            
+            console.log('data store : ', payloadUser.dateRech, payloadUser.site);
+            let list = [];
+
+            return dashboardService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech, payloadUser.site).then(
+                (response) => {
+                    console.log('data store : ', response);
+                    dashboardService.getDateDashboardList(response).forEach((item) => {
+                        console.log(item);
+                        list.push(item);
+                    });
+                    console.log(list.length);
+                    commit('removeChartPiedList');
+                    commit('setChartPiedList', list);
+                },
+
+                (error) => {
+                    commit('loginFailure', error.response.data);
+                    return Promise.reject(error);
+                }
+            );
         }
     }
 };

@@ -22,16 +22,16 @@ class DashBoardService {
         });
     }
 
-    appelServiceOperationParDateRechEtParSite(dateRech , site) {
-        let requete="";
-        if(site===0){
-        requete='/dash/notes/'+ dateRech
-        }else{
-         requete='/dash/notes/'+site+'/'+ dateRech
+    appelServiceOperationParDateRechEtParSite(dateRech, site) {
+        let requete = '';
+        if (site === 0) {
+            requete = '/dash/notes/' + dateRech;
+        } else {
+            requete = '/dash/notes/' + site + '/' + dateRech;
         }
         return api.get(requete).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
-            console.log("response appelServiceOperationParDateRechEtParSite : " ,response.data );
+            console.log('response appelServiceOperationParDateRechEtParSite : ', response.data);
             return response;
         });
     }
@@ -64,13 +64,6 @@ class DashBoardService {
         });
     }
 
-    appelServiceRecetteRtnc(dateRech) {
-        return api.get('/finances/dash/' + dateRech + '/rtnc').then((response) => {
-            console.log('response appelServiceRecetteRtnc:' + JSON.stringify(response.data));
-            return response;
-        });
-    }
-
     appelServiceRecetteSite(dateRech, nomSite) {
         return api.get('/finances/dash/' + nomSite + '/' + dateRech).then((response) => {
             console.log('response appelServiceRecetteSite:' + JSON.stringify(response.data));
@@ -86,8 +79,7 @@ class DashBoardService {
     }
 
     getDateDashboardList(response) {
-
-        console.log("data response : " , response.data)
+        console.log('data response : ', response.data);
 
         let list = [];
         let imm = {
@@ -167,10 +159,9 @@ class DashBoardService {
         console.log('Date now ', dateRech);
 
         api.get('/finances/dash/' + dateRech).then((response) => {
-
             console.log(response);
 
-            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService. numberWithCommas(response.data.dgi.total_fc) + "(en FC)"  : 0, icon: 'pi pi-money-bill' });
+            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService.numberWithCommas(response.data.dgi.total_fc) + '(en FC)' : 0, icon: 'pi pi-money-bill' });
         });
 
         api.get('/dash/plaques/' + dateRech).then((response) => {
@@ -193,19 +184,17 @@ class DashBoardService {
         if (site != 0) {
             requeteCard = '/dash/plaques/' + site + '/' + dateRech;
             requetePiedChart = '/finances/dash/' + site + '/' + dateRech;
-            
         } else {
             requeteCard = '/dash/plaques/' + dateRech;
             requetePiedChart = '/finances/dash/' + dateRech;
         }
 
-        console.log(requeteCard, site, dateRech , requetePiedChart);
+        console.log(requeteCard, site, dateRech, requetePiedChart);
         console.log('Date now ', dateRech);
 
         api.get(requetePiedChart).then((response) => {
             console.log(response);
-
-            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService. numberWithCommas(response.data.dgi.total_fc) + "(en FC)"  : 0, icon: 'pi pi-dollar' });
+            list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService.numberWithCommas(response.data.dgi.total_fc) + '(en FC)' : 0, icon: 'pi pi-dollar' });
         });
 
         api.get(requeteCard).then((response) => {

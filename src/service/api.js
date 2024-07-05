@@ -1,5 +1,7 @@
 import axios from 'axios';
 import store from '../store';
+import router from '../router';
+
 
 
 const axiosClient = axios.create({
@@ -38,12 +40,16 @@ axiosClient.interceptors.response.use(
         if (error.response) {
             
             if (error.response.status === 401) {
-                console.log(error.response.data)
+                console.log(error.message)
             } else if (error.response.status === 403) {
-                console.log(error.response.data)
+                console.log(error.message)
+                router.push({ name: 'Login' })
             } else if (error.response.status === 500) {
-                console.log(error.response.data)
+                console.log(error.message)
             }
+        }else{
+            console.log(error.response.status)
+            console.log(error.message)
         }
         return Promise.reject(error);
     }

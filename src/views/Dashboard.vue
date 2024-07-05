@@ -20,8 +20,13 @@ import { rand } from '@vueuse/shared'
 const greetings = ['Hello', 'Hi', 'Yo!', 'Hey', 'Hola', 'こんにちは', 'Bonjour', 'Salut!', '你好', 'Привет']
 const word = ref('Hello')
 const interval = ref(300000)
+const tous_site="Tous les Sites"
+const siteId="1111"
 
-const { pause, resume, isActive } = useIntervalFn(() => { 
+const selectedSite = ref({ id: siteId, nom: tous_site })
+
+
+const { pause, resume, isActive } = useIntervalFn(() => {
     getDashboardData()
 
 }, interval)
@@ -39,7 +44,7 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
-const tous_site = ref(false);
+
 
 const userConnected = tokenService.getUser();
 
@@ -56,8 +61,8 @@ const lineOptions = ref(null);
 
 const dateRech = new Date().getTime();
 
-const selectedSite = ref();
-const selectedDay = ref();
+
+const selectedDay = ref({ name: 'Live', nbre: 0 });
 const siteList = ref([]);
 
 
@@ -86,17 +91,17 @@ computed(() => {
 onMounted(() => {
     // dashboardService.appelServicePlaques(dateRech);
     // dashboardService.appelServiceFinanceSite(dateRech);
-    cardDataList = dashboardService.getCardDataDash(dashboardService.getDateFormat(dateRech));
+    cardDataList = dashboardService.getCardDataDash(dashboardService.getDateFormat(dateRech))
     console.log("data : ", cardDataList);
 
     //store.state.dashboard.getters.chartPiedList(dateRech);
-    store.dispatch("dashboard/appelServiceOperation", dashboardService.getDateFormat(dateRech));
+    store.dispatch("dashboard/appelServiceOperation", dashboardService.getDateFormat(dateRech))
 
     store.dispatch("auth/getUserConnected");
     //
     //console.log("data computed: " + store.state.dashboard.chartPiedList);
     dashboardService.getPrivilegesSites().then((response) => {
-        siteList.value = response.data.filter((item) => item.id.length >= 4);;
+        siteList.value = response.data.filter((item) => item.id.length >= 4);
     });
 });
 
@@ -112,15 +117,15 @@ function getDashboardData() {
     let dateSelected;
 
     if (selectedDay.value == null || selectedDay.value.name == 'Live') {
-        dateSelected=0;
+        dateSelected = 0;
     } else {
-        dateSelected=selectedDay.value.nbre; 
+        dateSelected = selectedDay.value.nbre;
     }
 
-    if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
+    if (selectedSite.value == null || selectedSite.value.nom == tous_site) {
         idsite = 0;
     } else {
-       idsite=selectedSite.value.id
+        idsite = selectedSite.value.id
     }
     payloadUser = { site: idsite, dateRech: moment().subtract(dateSelected, 'days').format('yyyy-MM-DD') }
     cardDataList = dashboardService.getCardDataDashParSite(idsite, dashboardService.getDateFormat(dateRech));
@@ -159,7 +164,7 @@ function getOnValueChangedDropdownDateRebours(v) {
     cardDataList = [];
     let payloadUser;
 
-    if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
+    if (selectedSite.value == null || selectedSite.value.nom == tous_site) {
 
         const idsite = 0;
         payloadUser = { site: idsite, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
@@ -175,7 +180,14 @@ function getOnValueChangedDropdownDateRebours(v) {
 
         console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), selectedSite.value);
 
-        cardDataList = dashboardService.getCardDataDashParSite(selectedSite.value.id, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
+        cardDataList = dashboardService.getCardDataDashParSite(selectedSite.value.id, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'))
+            .then((error) => {
+                console.log(error.message);
+                if (error.response.status == 403) {
+                    console.log("dashboard" , error.message); 
+                }
+            }
+            );
 
         store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
     }
@@ -268,8 +280,8 @@ watch(
 
             <div class="card flex flex-wrap justify-content-start gap-3">
                 <div class="flex align-items-center">
-                    <Dropdown placeholder="Select a Site" v-model="selectedSite" :options="siteList" :filter="true"
-                        optionLabel="nom" @update:modelValue="getOnValueChangedDropdownSite"
+                    <Dropdown  v-model="selectedSite" :options="siteList" :filter="true"
+                           @update:modelValue="getOnValueChangedDropdownSite"
                         class="w-full md:w-[14rem] ">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex items-center">
