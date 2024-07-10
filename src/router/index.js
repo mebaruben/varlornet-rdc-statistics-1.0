@@ -117,7 +117,18 @@ const router = createRouter({
                     path: '/statistiques/tableau-synthese-note',
                     name: 'tableau-synthese-note',
                     component: () => import('@/views/statistiques/TableauSyntheseNotesParOperation.vue')
+                },
+                {
+                    path: '/rtnc/notes-initiees-rtnc',
+                    name: 'notes-initiees-rtnc',
+                    component: () => import('@/views/rtnc/NoteInitieesRtnc.vue')
+                },
+                {
+                    path: '/rtnc/notes-apurees-rtnc',
+                    name: 'notes-apurees-rtnc',
+                    component: () => import('@/views/rtnc/NotesApureesRtnc.vue')
                 }
+                
             ]
         },
         {

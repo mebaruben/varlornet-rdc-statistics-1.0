@@ -179,8 +179,8 @@ const model_admin = ref([
                 module: 4,
                 items: [
 
-                    { label: 'Notes Initiées', icon: 'pi pi-fw pi-bookmark' },
-                    { label: 'Notes Payées', icon: 'pi pi-fw pi-bookmark' }
+                    { label: 'Notes Initiées', icon: 'pi pi-fw pi-bookmark',to:'/rtnc/notes-initiees-rtnc' },
+                    { label: 'Notes Payées', icon: 'pi pi-fw pi-bookmark' , to:'/rtnc/notes-apurees-rtnc' }
 
                 ]
             },

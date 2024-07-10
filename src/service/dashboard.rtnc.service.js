@@ -29,26 +29,18 @@ class DashBoardRtncService{
         let requeteDashFinance="";
         let requeteDashNotes="";
 
-        if (site != 0) {    
-            requeteDashFinance = '/finances/dash/' + site + '/' + dateRech +'/rtnc';
-            requeteDashNotes = '/dash/notes/' + site + '/' + dateRech +'/rtnc';
-            
-        } else {
-            requeteDashFinance = '/finances/dash/' + dateRech +'/rtnc';
-            requeteDashNotes = '/dash/notes/'+ dateRech +'/rtnc';
-        }
 
         console.log(requeteDashFinance, site, dateRech , requeteDashNotes);
         console.log('Date now ', dateRech);
 
-        api.get(requeteDashNotes).then((res) => {
+        api.get('/dash/notes/'+ dateRech +'/rtnc').then((res) => {
             console.log(requeteDashNotes, res);
             list.push({ id: 1, title: 'OPERATIONS INITIEES', nombre: res.data['operations']['IMMATRICULATION'].emise, icon: 'pi pi-car' });
             list.push({ id: 2, title: 'OPERATIONS PAYEES', nombre: res.data['operations']['IMMATRICULATION'].valide, icon: 'pi pi-car' });
             console.log(list);
         });
 
-        api.get(requeteDashFinance).then((response) => {
+        api.get('/finances/dash/' + dateRech +'/rtnc').then((response) => {
             console.log(requeteDashFinance, response);
             list.push({ id: 3, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('rtnc') ? tokenService. numberWithCommas(response.data.rtnc.total_fc) + "(en FC)"  : 0, icon: 'pi pi-dollar' });
         });
@@ -56,6 +48,31 @@ class DashBoardRtncService{
         
 
         return list;
+    }
+
+    getStatNotesInitieesPeriodiqueParSite(idSite, dateDebut , dateFin ){
+        let requete="";
+        if(idSite==0){
+            requete='operations/notes/'+dateDebut+'/'+dateFin+'/rtnc'
+        }else{
+            requete='operations/notes/'+idSite+'/'+dateDebut+'/'+dateFin+'/rtnc'
+        }
+
+     return api.get(requete).then((response)=>{
+        return response;
+     })
+    }
+
+    getStatNotesPayeesPeriodiqueParSite(idSite , dateDebut , dateFin ){
+        let requete="";
+        if(idSite==0){
+            requete='operations/apurees/'+dateDebut+'/'+dateFin+'/rtnc'
+        }else{
+            requete='operations/apurees/'+idSite+'/'+dateDebut+'/'+dateFin+'/rtnc'
+        }
+     return api.get(requete).then((response)=>{
+        return response;
+     })
     }
 
 }

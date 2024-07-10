@@ -22,7 +22,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 }, interval)
 
 
-let cardDataList =[];
+let  cardDataList =[];
 
 
 const days = ref([
@@ -80,7 +80,7 @@ computed(() => {
 
 onMounted(() => {
     
-    cardDataList = dashboardRtncService.getCardDataDashParSite(0 , dashboardService.getDateFormat(dateRech))
+    cardDataList.value = dashboardRtncService.getCardDataDashParSite(0 , dashboardService.getDateFormat(dateRech))
 
     console.log("data : ", cardDataList);
 
