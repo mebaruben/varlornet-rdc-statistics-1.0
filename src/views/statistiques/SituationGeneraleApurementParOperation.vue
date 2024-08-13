@@ -16,7 +16,7 @@ const load = () => {
 
     ;
 
-    statistiqueDgiFinanciere.statFinanceTotaleApuresParOperation(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
+    statistiqueDgiFinanciere.statFinanceTotaleApueeresParOperation(selectedSite.value.id, dashboardService.getDateFormat(dateDebut.value), dashboardService.getDateFormat(dateFin.value)).then((response) => {
         console.log(response.data);
         noteList.value = response.data;
     })

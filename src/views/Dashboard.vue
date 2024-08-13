@@ -20,16 +20,13 @@ import { rand } from '@vueuse/shared'
 const greetings = ['Hello', 'Hi', 'Yo!', 'Hey', 'Hola', 'こんにちは', 'Bonjour', 'Salut!', '你好', 'Привет']
 const word = ref('Hello')
 const interval = ref(300000)
-const tous_site="Tous les Sites"
+const tous_site="TOUS SITES"
 const siteId="1111"
 
 const selectedSite = ref({ id: siteId, nom: tous_site })
 
 
-const { pause, resume, isActive } = useIntervalFn(() => {
-    getDashboardData()
 
-}, interval)
 
 
 let cardDataList = [];
@@ -87,6 +84,11 @@ computed(() => {
 
 });
 
+const { pause, resume, isActive } = useIntervalFn(() => {
+    getDashboardData()
+
+}, interval)
+
 
 onMounted(() => {
     // dashboardService.appelServicePlaques(dateRech);
@@ -99,9 +101,16 @@ onMounted(() => {
 
     store.dispatch("auth/getUserConnected");
     //
+    siteList.value.push({id: '0000', nom: 'TOUS SITES'})
     //console.log("data computed: " + store.state.dashboard.chartPiedList);
     dashboardService.getPrivilegesSites().then((response) => {
-        siteList.value = response.data.filter((item) => item.id.length >= 4);
+      //  siteList.value = response.data.filter((item) => item.id.length >= 4);
+        response.data.forEach(element => {
+            if(element.id.length >= 4){
+                siteList.value.push(element)
+            }
+            
+        });
     });
 });
 
@@ -111,7 +120,7 @@ function getDashboardData() {
     word.value = greetings[rand(0, greetings.length - 1)]
 
     console.log("Methode getDashboardData")
-    cardDataList = [];
+   // cardDataList = [];
     let payloadUser;
     let idsite;
     let dateSelected;
@@ -144,7 +153,6 @@ function getOnValueChangedDropdownSite(v) {
 
         console.log("valeur jour :", moment().subtract(0, 'days').format('yyyy-MM-DD'), v.id);
         cardDataList = dashboardService.getCardDataDashParSite(v.id, moment().subtract(0, 'days').format('yyyy-MM-DD'));
-
         store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
     } else {
 
@@ -327,11 +335,11 @@ watch(
 
         </div>
 
-        <CardView v-if="cardDataList.length != 0 && store.state.dashboard.chartPiedList.length != 0"
-            v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
+        <CardView v-if="cardDataList.length != 0 "
+            v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)"  :cardData="item" :key="item.id">
         </CardView>
 
-        <div v-if="store.state.dashboard.chartPiedList.length != 0 && cardDataList.length != 0"
+        <div v-if="store.state.dashboard.chartPiedList.length != 0 "
             class="grid grid-cols-3">
             <ChartView></ChartView>
             <ChartViewMut></ChartViewMut>
@@ -341,7 +349,7 @@ watch(
             <ChartViewTemp></ChartViewTemp>
 
         </div>
-        <div v-else class="card flex justify-center">
+        <div v-else class="card flex flex-wrap justify-content-center">
             <CardLoader></CardLoader>
         </div>
     </div>

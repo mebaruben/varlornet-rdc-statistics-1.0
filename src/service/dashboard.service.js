@@ -3,6 +3,8 @@ import moment from 'moment';
 import tokenService from './token.service';
 
 class DashBoardService {
+
+    
     getDateDashboard(nombreJour) {
         var date = new Date();
         local.setDate(date + nombreJour);
@@ -209,8 +211,8 @@ class DashBoardService {
         return list;
     }
 
-    getPrivilegesSites() {
-        return api.get('/privileges/profile/sites').then((response) => {
+      getPrivilegesSites()  {
+        return  api.get('/privileges/profile/sites').then((response) => {
             console.log(response.data);
             return response;
         });

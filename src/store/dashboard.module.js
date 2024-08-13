@@ -7,7 +7,8 @@ export default {
     state: {
         dashOperation: {},
         messageError: null,
-        chartPiedList: []
+        chartPiedList: [] ,
+        siteList: [] ,
     },
 
     getters: {},
@@ -36,6 +37,9 @@ export default {
 
         removeChartPiedList(state) {
             state.chartPiedList = [];
+        },
+        setSiteList(state, siteListData) {
+            state.siteList = siteListData;
         }
     },
 
@@ -69,16 +73,10 @@ export default {
                 }
             );
         },
+        
         sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then(({ response }) => {
-                commit('setSites', response);
-                return response;
-            });
-        },
-
-        sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then(({ response }) => {
-                commit('setSites', response);
+            return axiosClient.get('/privileges/profile/sites').then((response) => {
+                commit('setSiteList', response.data);
                 return response;
             });
         },

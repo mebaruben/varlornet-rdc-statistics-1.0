@@ -286,7 +286,6 @@ watch(
             <ChartViewFlotte></ChartViewFlotte>
             <ChartViewRenouvellement></ChartViewRenouvellement>
             
-
         </div>
         <div v-else class="card flex justify-center">
             <CardLoader></CardLoader>

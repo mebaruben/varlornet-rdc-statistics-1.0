@@ -2,7 +2,6 @@
 import { computed, onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import CardView from './CardView.vue';
-import ChartView from '../components/ChartView.vue';
 import store from '../store';
 import dashboardService from '../service/dashboard.service';
 import dashboardRtncService from '../service/dashboard.rtnc.service';
@@ -34,15 +33,12 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
-const tous_site = ref(false);
 
 const userConnected = tokenService.getUser();
 
 console.log(userConnected.data)
 
 const { isDarkTheme } = useLayout();
-
-const checked = ref(false);
 
 const loading = ref(false);
 
@@ -72,19 +68,24 @@ computed(() => {
 
     mapState(["auth"]);
     mapState(["dashboard"]);
+    mapState(["dashboardRtncModule"]);
 
     setInterval(load, 5000);
+
+    
 
 });
 
 
 onMounted(() => {
     
-    cardDataList.value = dashboardRtncService.getCardDataDashParSite(0 , dashboardService.getDateFormat(dateRech))
+    cardDataList= dashboardRtncService.getCardDataDashParSite(0 , dashboardService.getDateFormat(dateRech))
 
     console.log("data : ", cardDataList);
 
     store.dispatch("auth/getUserConnected");
+
+    store.dispatch("dashboardRtncModule/listCardDashboardData", { dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') ,site: 0 });
 
     dashboardService.getPrivilegesSites().then((response) => {
         siteList.value = response.data.filter((item) => item.id.length >= 4);
@@ -312,12 +313,12 @@ watch(
             </div>
 
         </div>
+         
+        <p>{{ store.state.dashboardRtncModule.cardListDashboard }}</p>
 
-        <CardView v-if="cardDataList.length != 0"
-            v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
+        <CardView 
+            v-for="item in store.state.dashboardRtncModule.cardListDashboard.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
         </CardView>
-        <div v-else class="card flex justify-center">
-            <CardLoader></CardLoader>
-        </div>
+        
     </div>
 </template>
