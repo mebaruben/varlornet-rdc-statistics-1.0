@@ -17,64 +17,64 @@ class DashBoardService {
         return moment(dateData).format('yyyy-MM-DD');
     }
 
-    appelServiceOperation(dateRech) {
-        return api.get('/dash/notes/' + dateRech).then((response) => {
+   async appelServiceOperation(dateRech) {
+        return await api.get('/dash/notes/' + dateRech).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
             return response;
         });
     }
 
-    appelServiceOperationParDateRechEtParSite(dateRech, site) {
+   async appelServiceOperationParDateRechEtParSite(dateRech, site) {
         let requete = '';
         if (site === 0) {
             requete = '/dash/notes/' + dateRech;
         } else {
             requete = '/dash/notes/' + site + '/' + dateRech;
         }
-        return api.get(requete).then((response) => {
+        return  await api.get(requete).then((response) => {
             //  Object.values(this.getDateDashboardList(response)).forEach((data) =>{ console.log(data);list.push(data); })
             console.log('response appelServiceOperationParDateRechEtParSite : ', response.data);
             return response;
         });
     }
 
-    appelServiceOperationSite(dateRech, nomSite) {
-        return api.get('/dash/notes/' + nomSite + '/' + dateRech).then((response) => {
+  async  appelServiceOperationSite(dateRech, nomSite) {
+        return  await api.get('/dash/notes/' + nomSite + '/' + dateRech).then((response) => {
             //  console.log('response appelServiceOperationSite:' + JSON.stringify(response.data));
             return response;
         });
     }
 
-    appelServicePlaques(dateRech) {
-        return api.get('/dash/plaques/' + dateRech).then((response) => {
+  async   appelServicePlaques(dateRech) {
+        return  await api.get('/dash/plaques/' + dateRech).then((response) => {
             console.log('response appelServicePlaques:' + JSON.stringify(response.data));
             return response;
         });
     }
 
-    appelServicePlaqueSite(dateRech, nomSite) {
-        return api.get('/dash/plaques/' + nomSite + '/' + dateRech).then((response) => {
+  async   appelServicePlaqueSite(dateRech, nomSite) {
+        return await api.get('/dash/plaques/' + nomSite + '/' + dateRech).then((response) => {
             console.log('response appelServicePlaqueSite:' + JSON.stringify(response.data));
             return response;
         });
     }
 
-    appelServiceCommisssion(date) {
-        return api.get('/finances/dash/courtier/' + date).then((response) => {
+   async   appelServiceCommisssion(date) {
+        return await api.get('/finances/dash/courtier/' + date).then((response) => {
             console.log('response appelServiceCommisssion:' + JSON.stringify(response.data));
             return response;
         });
     }
 
-    appelServiceRecetteSite(dateRech, nomSite) {
-        return api.get('/finances/dash/' + nomSite + '/' + dateRech).then((response) => {
+   async   appelServiceRecetteSite(dateRech, nomSite) {
+        return await api.get('/finances/dash/' + nomSite + '/' + dateRech).then((response) => {
             console.log('response appelServiceRecetteSite:' + JSON.stringify(response.data));
             return response;
         });
     }
 
-    appelServiceFinanceSite(dateRech) {
-        return api.get('/finances/dash/' + dateRech).then((response) => {
+   async  appelServiceFinanceSite(dateRech) {
+        return await api.get('/finances/dash/' + dateRech).then((response) => {
             console.log('response appelServiceFinanceSite:' + JSON.stringify(response.data));
             return response;
         });
@@ -156,17 +156,17 @@ class DashBoardService {
         return list;
     }
 
-    getCardDataDash(dateRech) {
+    async getCardDataDash(dateRech) {
         let list = [];
         console.log('Date now ', dateRech);
 
-        api.get('/finances/dash/' + dateRech).then((response) => {
+      await  api.get('/finances/dash/' + dateRech).then((response) => {
             console.log(response);
 
             list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService.numberWithCommas(response.data.dgi.total_fc) + '(en FC)' : 0, icon: 'pi pi-money-bill' });
         });
 
-        api.get('/dash/plaques/' + dateRech).then((response) => {
+      await  api.get('/dash/plaques/' + dateRech).then((response) => {
             console.log(response);
             list.push({ id: 1, title: 'PLAQUES DISPONIBLES', nombre: response.data.dispo, icon: 'pi pi-car' });
             list.push({ id: 2, title: 'PLAQUES RESERVEES', nombre: response.data.reserve_non_attribue, icon: 'pi pi-car' });
@@ -178,7 +178,7 @@ class DashBoardService {
         return list;
     }
 
-    getCardDataDashParSite(site, dateRech) {
+   async getCardDataDashParSite(site, dateRech) {
         let list = [];
         let requeteCard;
         let requetePiedChart;
@@ -194,12 +194,12 @@ class DashBoardService {
         console.log(requeteCard, site, dateRech, requetePiedChart);
         console.log('Date now ', dateRech);
 
-        api.get(requetePiedChart).then((response) => {
+      await  api.get(requetePiedChart).then((response) => {
             console.log(response);
             list.push({ id: 5, title: 'RECETTES REALISEES', nombre: response.data.hasOwnProperty('dgi') ? tokenService.numberWithCommas(response.data.dgi.total_fc) + '(en FC)' : 0, icon: 'pi pi-dollar' });
         });
 
-        api.get(requeteCard).then((response) => {
+      await  api.get(requeteCard).then((response) => {
             console.log(response);
             list.push({ id: 1, title: 'PLAQUES DISPONIBLES', nombre: response.data.dispo, icon: 'pi pi-car' });
             list.push({ id: 2, title: 'PLAQUES RESERVEES', nombre: response.data.reserve_non_attribue, icon: 'pi pi-car' });
@@ -211,8 +211,8 @@ class DashBoardService {
         return list;
     }
 
-      getPrivilegesSites()  {
-        return  api.get('/privileges/profile/sites').then((response) => {
+      async getPrivilegesSites()  {
+        return await  api.get('/privileges/profile/sites').then((response) => {
             console.log(response.data);
             return response;
         });

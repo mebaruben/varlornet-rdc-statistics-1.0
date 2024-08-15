@@ -70,9 +70,9 @@ computed(() => {
     mapState(["auth"]);
 });
 
-function getUserConnected(email) {
+async function getUserConnected(email) {
 
-    store.dispatch("auth/getUserConnected", email).then((response) => {
+  await  store.dispatch("auth/getUserConnected", email).then((response) => {
 
         console.log('data user get User connected ', response.data);
         loading.value = false;
@@ -115,13 +115,13 @@ function getUserConnected(email) {
 
 
 
-function auth() {
+async function auth() {
 
     user = { login: email.value, password: password.value, adresseMac, nomMachine }
 
     loading.value = true;
 
-    store.dispatch("auth/login", user).then(() => {
+  await  store.dispatch("auth/login", user).then(() => {
 
         getUserConnected(email);
 

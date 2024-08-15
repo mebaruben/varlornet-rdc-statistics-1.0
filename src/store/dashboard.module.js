@@ -9,11 +9,18 @@ export default {
         messageError: null,
         chartPiedList: [] ,
         siteList: [] ,
+        cardlistData:[],
     },
 
-    getters: {},
+    getters: {
+
+
+    },
 
     mutations: {
+        setCardlistData:(state , list) =>{
+         state.cardlistData=list;
+        },
         setDashOperation: (state, dashOperationData) => {
             state.dashOperation = dashOperationData;
         },
@@ -74,17 +81,17 @@ export default {
             );
         },
         
-        sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then((response) => {
+      async  sitesByprofile({ commit }) {
+            return await axiosClient.get('/privileges/profile/sites').then((response) => {
                 commit('setSiteList', response.data);
                 return response;
             });
         },
 
-        appelServiceOperation({ commit }, dateRech) {
+      async  appelServiceOperation({ commit }, dateRech) {
             let list = [];
 
-            return dashboardService.appelServiceOperation(dateRech).then((response) => {
+            return await dashboardService.appelServiceOperation(dateRech).then((response) => {
                 dashboardService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
@@ -95,11 +102,11 @@ export default {
             });
         },
 
-        appelServiceOperationParDateRechEtParSite({ commit }, payloadUser) {
+      async  appelServiceOperationParDateRechEtParSite({ commit }, payloadUser) {
             console.log('data store : ', payloadUser.dateRech, payloadUser.site);
             let list = [];
 
-            return dashboardService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech, payloadUser.site).then(
+            return await dashboardService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech, payloadUser.site).then(
                 (response) => {
                     console.log('data store : ', response);
                     dashboardService.getDateDashboardList(response).forEach((item) => {
@@ -116,6 +123,30 @@ export default {
                     return Promise.reject(error);
                 }
             );
-        }
+        } ,
+
+        async  appelServiceOperationCardData({ commit }, payloadUser) {
+            console.log('data store : ', payloadUser.dateRech, payloadUser.site);
+            let list = [];
+
+            return (await dashboardService.getCardDataDash(dashboardService.getDateFormat(payloadUser.dateRech))).forEach(value =>{
+                list.push(value);
+                commit('setCardlistData', list);
+            } 
+
+        );        
+        } ,
+
+        async  appelServiceOperationCardDataParSite({ commit }, payloadUser) {
+            console.log('data store : ', payloadUser.dateRech, payloadUser.site);
+            let list = [];
+            return (await dashboardService.getCardDataDashParSite(payloadUser.site,payloadUser.dateRech)).forEach(value =>{
+                list.push(value);
+                commit('setCardlistData', list);
+            } 
+        );        
+        } ,
+
+        
     }
 };

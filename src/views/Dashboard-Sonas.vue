@@ -1,18 +1,16 @@
 <script setup>
-import { computed, onMounted, ref, watch , onBeforeUnmount } from 'vue';
+import { computed, onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import CardView from './CardView.vue';
 import store from '../store';
 import dashboardSonasService from '../service/dashboard.sonas.service';
 import tokenService from '../service/token.service';
-import CardLoader from '../components/CardLoader.vue';
 import moment from 'moment/moment';
 import ChartViewNovelleAffaire from '../components/ChartViewNovelleAffaire.vue';
 import ChartViewFlotte from '../components/ChartViewFlotte.vue';
 import ChartViewRenouvellement from '../components/ChartViewRenouvellement.vue';
-
-
-let cardDataList = [];
+import CardSkeleton from '../components/CardSkeleton.vue';
+import { useIntervalFn } from '@vueuse/core'
 
 
 const days = ref([
@@ -24,7 +22,11 @@ const days = ref([
     { name: 'J-5', nbre: 5 },
 ]);
 
-const tous_site = ref(false);
+const tous_site = "TOUS SITES"
+const siteId = "1111"
+
+const selectedSite = ref({ id: siteId, nom: tous_site })
+const selectedDay = ref({ name: 'Live', nbre: 0 });
 
 const userConnected = tokenService.getUser();
 
@@ -32,7 +34,7 @@ console.log(userConnected.data)
 
 const { isDarkTheme } = useLayout();
 
-const checked = ref(false); 
+const checked = ref(false);
 
 const loading = ref(false);
 
@@ -41,9 +43,10 @@ const lineOptions = ref(null);
 
 const dateRech = new Date().getTime();
 
-const selectedSite = ref();
-const selectedDay = ref();
 const siteList = ref([]);
+const greetings = ['Hello', 'Hi', 'Yo!', 'Hey', 'Hola', 'こんにちは', 'Bonjour', 'Salut!', '你好', 'Привет']
+const word = ref('Hello')
+const interval = ref(300000)
 
 
 const load = () => {
@@ -54,8 +57,8 @@ const load = () => {
 }
 
 onBeforeUnmount(() => {
-    
-  });
+
+});
 
 computed(() => {
 
@@ -65,23 +68,22 @@ computed(() => {
 });
 
 
-onMounted(() => {
+const { pause, resume, isActive } = useIntervalFn(async () => {
 
-    setInterval(load , 5000);
+  await  getDashboardData()
 
-    // dashboardService.appelServicePlaques(dateRech);
-    // dashboardService.appelServiceFinanceSite(dateRech);
-    cardDataList = dashboardSonasService.getCardDataDash(dashboardSonasService.getDateFormat(dateRech));
-    console.log("data : ", cardDataList);
+}, interval)
 
-    //store.state.dashboard.getters.chartPiedList(dateRech);
-    store.dispatch("dashboard_assurance/appelServiceOperation", dashboardSonasService.getDateFormat(dateRech));
 
-    store.dispatch("auth/getUserConnected");
-    //
-    //console.log("data computed: " + store.state.dashboard.chartPiedList);
-    dashboardSonasService.getPrivilegesSites().then((response) => {
+onMounted(async () => {
 
+    setInterval(load, 5000);
+
+    await store.dispatch("dashboard_assurance/appelServiceOperationCardData", dashboardSonasService.getDateFormat(dateRech))
+    await store.dispatch("dashboard_assurance/appelServiceOperation", dashboardSonasService.getDateFormat(dateRech));
+    await store.dispatch("auth/getUserConnected");
+
+    await dashboardSonasService.getPrivilegesSites().then((response) => {
         siteList.value = response.data.filter((item) => item.id.length <= 2);
     });
 
@@ -90,59 +92,68 @@ onMounted(() => {
 
 //IMMATRICULATION  //
 
+async function getDashboardData() {
 
-function getOnValueChangedDropdownSite(v) {
-    cardDataList = [];
+    word.value = greetings[rand(0, greetings.length - 1)]
+
+    let payloadUser;
+    let idsite;
+    let dateSelected;
+
+    if (selectedDay.value == null || selectedDay.value.name == 'Live') {
+        dateSelected = 0;
+    } else {
+        dateSelected = selectedDay.value.nbre;
+    }
+
+    if (selectedSite.value == null || selectedSite.value.nom == tous_site) {
+        idsite = 0;
+    } else {
+        idsite = selectedSite.value.id
+    }
+    payloadUser = { site: idsite, dateRech: moment().subtract(dateSelected, 'days').format('yyyy-MM-DD') }
+    // cardDataList = await dashboardService.getCardDataDashParSite(idsite, dashboardService.getDateFormat(dateRech));
+    await store.dispatch("dashboard_assurance/appelServiceOperationCardDataParSite", payloadUser);
+    await store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite", payloadUser);
+
+}
+
+
+async function getOnValueChangedDropdownSite(v) {
 
     let payloadUser;
 
     if (selectedDay.value == null || selectedDay.value.name == 'Live') {
 
         payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
-
         console.log("valeur jour :", moment().subtract(0, 'days').format('yyyy-MM-DD'), v.id);
-        cardDataList = dashboardSonasService.getCardDataDashParSite(v.id, moment().subtract(0, 'days').format('yyyy-MM-DD'));
-        
-        store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite",  payloadUser);
+
     } else {
 
         payloadUser = { site: v.id, dateRech: moment().subtract(0, 'days').format('yyyy-MM-DD') }
         console.log("valeur jour :", moment().subtract(selectedDay.value.nbre, 'days').format('yyyy-MM-DD'), v.id);
-
-        cardDataList = dashboardSonasService.getCardDataDashParSite(v.id, dashboardSonasService.getDateFormat(dateRech));
-        
-        store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite",  payloadUser);
     }
+
+    await store.dispatch("dashboard_assurance/appelServiceOperationCardDataParSite", payloadUser)
+    await store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite", payloadUser);
 
 }
 
-function getOnValueChangedDropdownDateRebours(v) {
-
-    cardDataList = [];
+async function getOnValueChangedDropdownDateRebours(v) {
     let payloadUser;
 
     if (selectedSite.value == null || selectedSite.value.nom == 'Live') {
-       
+
         const idsite = 0;
         payloadUser = { site: idsite, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
-
         console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), idsite);
-
-        cardDataList = dashboardSonasService.getCardDataDashParSite(idsite, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
-       
-       // store.dispatch("dashboard/appelServiceOperationParDateRechEtParSite", payloadUser);
-       store.dispatch("dashboard_assurance/appelServiceOperation", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
     } else {
         payloadUser = { site: selectedSite.value.id, dateRech: moment().subtract(v.nbre, 'days').format('yyyy-MM-DD') }
-
         console.log("valeur jour :", moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'), selectedSite.value);
-
-        cardDataList = dashboardSonasService.getCardDataDashParSite(selectedSite.value.id, moment().subtract(v.nbre, 'days').format('yyyy-MM-DD'));
-       
-        store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite", payloadUser);
     }
 
-
+    await store.dispatch("dashboard_assurance/appelServiceOperationCardDataParSite", payloadUser)
+    await store.dispatch("dashboard_assurance/appelServiceOperationParDateRechEtParSite", payloadUser);
 }
 
 
@@ -270,25 +281,29 @@ watch(
                     </Dropdown>
                 </div>
                 <div class="flex align-items-center">
-                    <Button text  icon="pi pi-search" :loading="loading"  ></Button>
+                    <Button text icon="pi pi-search" :loading="loading"></Button>
                 </div>
             </div>
 
         </div>
 
-        <CardView v-if="cardDataList.length != 0 && store.state.dashboard_assurance.chartPiedList.length != 0"
-            v-for="item in cardDataList.map(item => item).sort((a, b) => a.id - b.id)" :cardData="item" :key="item.id">
+        <CardView v-if="store.state.dashboard_assurance.cardDataList.length != 0"
+            v-for="item in store.state.dashboard_assurance.cardDataList.map(item => item).sort((a, b) => a.id - b.id)"
+            :cardData="item" :key="item.id">
         </CardView>
-
-        <div v-if="store.state.dashboard_assurance.chartPiedList.length != 0 && cardDataList.length != 0" class="grid grid-cols-3">
+        
+        <div v-if="store.state.dashboard_assurance.chartPiedList.length != 0"
+            class="grid grid-cols-3">
 
             <ChartViewNovelleAffaire></ChartViewNovelleAffaire>
             <ChartViewFlotte></ChartViewFlotte>
             <ChartViewRenouvellement></ChartViewRenouvellement>
-            
+
         </div>
-        <div v-else class="card flex justify-center">
-            <CardLoader></CardLoader>
+        <div v-else class="grid grid-cols-3 gap-2 mx-2 mt-2 ">
+            <CardSkeleton></CardSkeleton>
+            <CardSkeleton></CardSkeleton>
+            <CardSkeleton></CardSkeleton>
         </div>
     </div>
 </template>

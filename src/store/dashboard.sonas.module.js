@@ -1,4 +1,5 @@
 //import AuthService from '../service/'
+import { computedInject } from "@vueuse/core";
 import dashboardSonasService from "../service/dashboard.sonas.service";
 
 export default {
@@ -7,13 +8,23 @@ export default {
     state: {
         dashOperation: {},
         messageError: null,
-        chartPiedList: []
+        chartPiedList: [] ,
+        cardDataList : []
     },
 
     getters: {
     },
 
     mutations: {
+
+        setCardlistData:(state , list) =>{
+            state.cardDataList=list;
+           },
+
+         removeCardlistData:(state)=>{
+            state.cardDataList=[];
+         }  ,
+
         setDashOperation: (state, dashOperationData) => {
             state.dashOperation = dashOperationData;
         },
@@ -26,6 +37,7 @@ export default {
             state.userToken.loggedIn = false;
             state.userToken.token = null;
         },
+        
         logout(state) {
             state.userToken.loggedIn = false;
             state.userToken.token = null;
@@ -70,48 +82,75 @@ export default {
                 }
             );
         },
-        sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then(({ response }) => {
+
+     async sitesByprofile({ commit }) {
+            return await axiosClient.get('/privileges/profile/sites').then(({ response }) => {
                 commit('setSites', response);
                 return response;
             });
         },
 
-        sitesByprofile({ commit }) {
-            return axiosClient.get('/privileges/profile/sites').then(({ response }) => {
+    async  sitesByprofile({ commit }) {
+            return  await axiosClient.get('/privileges/profile/sites').then(({ response }) => {
                 commit('setSites', response);
                 return response;
             });
         },
 
-        appelServiceOperation({ commit }, dateRech) {
+     async appelServiceOperation({ commit }, dateRech) {
             let list=[];
-            commit('removeChartPiedList');
-            return dashboardSonasService.appelServiceOperation(dateRech).then(response => {
+            
+            return await dashboardSonasService.appelServiceOperation(dateRech).then(response => {
                 dashboardSonasService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
                 })
                 console.log(list.length);
+              //  commit('removeChartPiedList');
                 commit('setChartPiedList', list);
             });
             
         },
 
-        appelServiceOperationParDateRechEtParSite({ commit }, payloadUser) {
+      async  appelServiceOperationParDateRechEtParSite({ commit }, payloadUser) {
             console.log("data store : " ,payloadUser.dateRech , payloadUser.site )
             let list=[];
-            commit('removeChartPiedList');
-            return dashboardSonasService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech ,payloadUser.site).then(response => {
+            
+            return await dashboardSonasService.appelServiceOperationParDateRechEtParSite(payloadUser.dateRech ,payloadUser.site).then(response => {
                 console.log("data store : " ,response )
                 dashboardSonasService.getDateDashboardList(response).forEach((item) => {
                     console.log(item);
                     list.push(item);
                 })
                 console.log(list.length);
+               // commit('removeChartPiedList');
                 commit('setChartPiedList', list);
             });
             
-        }
+        },
+
+        async  appelServiceOperationCardData({ commit }, dateRech) {
+            console.log('date : ', dateRech);
+            let list = [];
+
+            return (await dashboardSonasService.getCardDataDash(dateRech)).forEach(value =>{
+                list.push(value);
+               // commit('removeCardlistData');
+                commit('setCardlistData', list);
+            } 
+
+        );        
+        } ,
+
+        async  appelServiceOperationCardDataParSite({ commit }, payloadUser) {
+            console.log('data store : ', payloadUser.dateRech, payloadUser.site);
+            let list = [];
+            return (await dashboardSonasService.getCardDataDashParSite(payloadUser.site,payloadUser.dateRech)).forEach(value =>{
+                list.push(value);
+               // commit('removeCardlistData');
+                commit('setCardlistData', list);
+            } 
+        );        
+        } ,
     }
 };

@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch , reactive , nextTick} from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import store from '../store';
+import { useIntervalFn } from '@vueuse/core'
 
 
 
@@ -11,16 +12,19 @@ let textColor = documentStyle.getPropertyValue('--text-color');
 let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
 let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
+const interval = ref(300000)
 const pieData = ref(null);
 const pieOptions = ref(null);
-const datalist=ref({});
+const datalist= ref(store.state.dashboard.chartPiedList.find(itemData => itemData.id===1));
 
-datalist.value=store.state.dashboard.chartPiedList.find(itemData => itemData.id===1);
+//datalist.value=store.state.dashboard.chartPiedList.find(itemData => itemData.id===1);
 
-console.log(datalist.value)
+console.log(datalist)
 
 
 console.log(store.state.dashboard.chartPiedList);
+
+
 
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
@@ -33,11 +37,11 @@ const setChart = () => {
     
    // chartPiedCard=+dataPiedIMM.emise   +dataPiedIMM.apure +dataPiedIMM.valide
     pieData.value = {
-        labels: datalist.value.dataOp.map(row =>row.libelle.charAt(0).toUpperCase()
+        labels: datalist.dataOp.map(row =>row.libelle.charAt(0).toUpperCase()
         + row.libelle.slice(1)+"("+row.valeur+")"),
         datasets: [
             {
-                data: datalist.value.dataOp.map(row =>row.valeur),
+                data: datalist.dataOp.map(row =>row.valeur),
                 backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
                 hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
             }
@@ -59,11 +63,13 @@ const setChart = () => {
 
 
 
+
 watch(
+    
     layoutConfig.theme,
     () => {
         setColorOptions();
-        setChart();
+            setChart();       
     },
     { immediate: true }
 );

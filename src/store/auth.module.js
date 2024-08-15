@@ -58,10 +58,10 @@ export default {
    
 
     actions: {
-        login({ commit }, user) {
+      async  login({ commit }, user) {
             console.log(user);
             // Login...
-            return AuthService.login(user).then(
+            return await AuthService.login(user).then(
                 (token) => {
                     commit('loginSuccess', token);
                     tokenService.setLocalAccessToken(token);       
@@ -74,8 +74,8 @@ export default {
             );
         },
 
-        getUserConnected({ commit }) {
-            return AuthService.getUserConnected().then(
+      async  getUserConnected({ commit }) {
+            return  await AuthService.getUserConnected().then(
                 (response) => {
                     console.log(response);
                     console.log('utilisateur connecté : ' + JSON.stringify(response.data));
@@ -91,8 +91,9 @@ export default {
                 }
             );
         },
-        sitesByprofile({ commit }) {
-            return dashboardService.getPrivilegesSites().then((response) => {
+
+     async   sitesByprofile({ commit }) {
+            return await dashboardService.getPrivilegesSites().then((response) => {
                 console.log("auth store site" , response.data);
                 commit('setSites', response.data);
                 return response;

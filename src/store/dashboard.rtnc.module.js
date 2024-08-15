@@ -18,9 +18,9 @@ export default{
 
     actions:{
 
-       listCardDashboardData({ commit }, payloadUser) {
+     async  listCardDashboardData({ commit }, payloadUser) {
             console.log('data store rtnc : ', payloadUser.dateRech, payloadUser.site);
-            let list = dashboardRtncService.getCardDataDashParSite(payloadUser.site , payloadUser.dateRech);
+            let list = await dashboardRtncService.getCardDataDashParSite(payloadUser.site , payloadUser.dateRech);
             console.log("data load  rtnc : " , list );
             commit("setCardListDashboard", list);
             return list;
